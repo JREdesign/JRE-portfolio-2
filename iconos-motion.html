@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <title>Tech Icons Grid</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <style>
+    :root {
+      --bg: #05060a;
+      --card-bg: #0d1017;
+      --text-muted: #a7b0c4;
+      --accent: #00d8ff;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, #111827 0, #020308 55%, #000 100%);
+      color: #fff;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    }
+
+    .skills-section {
+      padding: 32px 40px;
+      border-radius: 24px;
+      background: rgba(4, 7, 16, 0.95);
+      box-shadow:
+        0 24px 60px rgba(0, 0, 0, 0.7),
+        0 0 0 1px rgba(148, 163, 184, 0.08);
+      max-width: 1100px;
+      width: 100%;
+    }
+
+    .skills-title {
+      font-size: 24px;
+      margin-bottom: 20px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+    }
+
+    .skills-grid {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 32px 40px;
+    }
+
+    @media (max-width: 1024px) {
+      .skills-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+    }
+
+    @media (max-width: 640px) {
+      .skills-section {
+        padding: 20px 16px;
+      }
+
+      .skills-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 24px 20px;
+      }
+    }
+
+    .tech-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      text-align: center;
+    }
+
+    .icon-wrapper {
+      width: 88px;
+      height: 88px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 0 0, rgba(56, 189, 248, 0.18), transparent 55%),
+        radial-gradient(circle at 100% 100%, rgba(96, 165, 250, 0.18), transparent 55%),
+        var(--card-bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      box-shadow:
+        0 8px 24px rgba(15, 23, 42, 0.9),
+        0 0 0 1px rgba(148, 163, 184, 0.2);
+      transition:
+        transform 0.55s cubic-bezier(.34,1.56,.64,1),
+        box-shadow 0.35s ease,
+        background 0.35s ease;
+      transform-origin: center center;
+    }
+
+    .icon-wrapper img {
+      width: 62%;
+      height: 62%;
+      display: block;
+      object-fit: contain;
+      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8));
+      pointer-events: none;
+    }
+
+    /* Placeholder para InDesign */
+    .icon-wrapper .placeholder-id {
+      width: 70%;
+      height: 70%;
+      border-radius: 22%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 26px;
+      background: linear-gradient(145deg, #470036, #c7007e);
+      box-shadow:
+        0 10px 30px rgba(131, 24, 67, 0.7),
+        inset 0 0 0 2px rgba(248, 250, 252, 0.08);
+    }
+
+    .tech-label {
+      font-size: 14px;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+    }
+
+    /* Animación de giro + balanceo al hover */
+    .tech-item:hover .icon-wrapper {
+      box-shadow:
+        0 18px 40px rgba(15, 23, 42, 1),
+        0 0 0 1px rgba(56, 189, 248, 0.45);
+      animation: spin-wobble 0.85s ease-out;
+    }
+
+    @keyframes spin-wobble {
+      0% {
+        transform: translateY(0) rotate(0deg);
+      }
+      30% {
+        transform: translateY(-8px) rotate(380deg); /* giro completo + extra */
+      }
+      55% {
+        transform: translateY(-4px) rotate(348deg); /* rebote hacia atrás */
+      }
+      75% {
+        transform: translateY(-6px) rotate(370deg); /* pequeño contra-rebote */
+      }
+      100% {
+        transform: translateY(-2px) rotate(360deg); /* se queda un pelín elevado */
+      }
+    }
+
+    /* Pequeño “pop” de entrada opcional */
+    .tech-item {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeInUp 0.8s ease-out forwards;
+    }
+
+    .tech-item:nth-child(1) { animation-delay: 0.02s; }
+    .tech-item:nth-child(2) { animation-delay: 0.06s; }
+    .tech-item:nth-child(3) { animation-delay: 0.10s; }
+    .tech-item:nth-child(4) { animation-delay: 0.14s; }
+    .tech-item:nth-child(5) { animation-delay: 0.18s; }
+    .tech-item:nth-child(6) { animation-delay: 0.22s; }
+    .tech-item:nth-child(7) { animation-delay: 0.26s; }
+    .tech-item:nth-child(8) { animation-delay: 0.30s; }
+    .tech-item:nth-child(9) { animation-delay: 0.34s; }
+    .tech-item:nth-child(10) { animation-delay: 0.38s; }
+    .tech-item:nth-child(11) { animation-delay: 0.42s; }
+    .tech-item:nth-child(12) { animation-delay: 0.46s; }
+    .tech-item:nth-child(13) { animation-delay: 0.50s; }
+    .tech-item:nth-child(14) { animation-delay: 0.54s; }
+
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(18px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <section class="skills-section">
+    <h2 class="skills-title">Tech / Tools</h2>
+
+    <div class="skills-grid">
+      <!-- Fila 1 -->
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/photoshop/photoshop-plain.svg"
+            alt="Photoshop"
+          />
+        </div>
+        <span class="tech-label">Photoshop</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/illustrator/illustrator-plain.svg"
+            alt="Illustrator"
+          />
+        </div>
+        <span class="tech-label">Illustrator</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <!-- Placeholder para InDesign (no está en Devicon) -->
+          <div class="placeholder-id">Id</div>
+        </div>
+        <span class="tech-label">InDesign</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/html5/html5-original.svg"
+            alt="HTML"
+          />
+        </div>
+        <span class="tech-label">HTML</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/css3/css3-original.svg"
+            alt="CSS"
+          />
+        </div>
+        <span class="tech-label">CSS</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/javascript/javascript-original.svg"
+            alt="JavaScript"
+          />
+        </div>
+        <span class="tech-label">JavaScript</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/figma/figma-original.svg"
+            alt="Figma"
+          />
+        </div>
+        <span class="tech-label">Figma</span>
+      </div>
+
+      <!-- Fila 2 -->
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/bootstrap/bootstrap-original.svg"
+            alt="Bootstrap"
+          />
+        </div>
+        <span class="tech-label">Bootstrap</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/tailwindcss/tailwindcss-original.svg"
+            alt="Tailwind CSS"
+          />
+        </div>
+        <span class="tech-label">Tailwind</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/react/react-original.svg"
+            alt="React"
+          />
+        </div>
+        <span class="tech-label">React</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/nextjs/nextjs-original.svg"
+            alt="Next.js"
+          />
+        </div>
+        <span class="tech-label">Next.js</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/nodejs/nodejs-original.svg"
+            alt="Node.js"
+          />
+        </div>
+        <span class="tech-label">Node.js</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/mongodb/mongodb-original.svg"
+            alt="MongoDB"
+          />
+        </div>
+        <span class="tech-label">MongoDB</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img
+            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/aframe/aframe-original.svg"
+            alt="A-Frame"
+          />
+        </div>
+        <span class="tech-label">A-Frame</span>
+      </div>
+    </div>
+  </section>
+</body>
+</html>
