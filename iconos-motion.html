@@ -22,11 +22,14 @@
     body {
       min-height: 100vh;
       display: flex;
+      flex-direction: column; /* Cambiado para apilar secciones */
       align-items: center;
       justify-content: center;
       background: radial-gradient(circle at top, #111827 0, #020308 55%, #000 100%);
       color: #fff;
       font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      padding: 60px 20px; /* Padding para scroll y márgenes */
+      gap: 50px; /* Espacio entre las dos tarjetas */
     }
 
     .skills-section {
@@ -99,31 +102,25 @@
         box-shadow 0.35s ease,
         background 0.35s ease;
       transform-origin: center center;
+      position: relative;
     }
 
-    .icon-wrapper img {
-      width: 62%;
-      height: 62%;
+    /* Fallback para imágenes rotas */
+    .icon-wrapper img:before {
+      content: " ";
       display: block;
-      object-fit: contain;
-      filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.8));
-      pointer-events: none;
+      width: 100%;
+      height: 100%;
+      background: #1e293b;
     }
 
-    /* Placeholder para InDesign */
-    .icon-wrapper .placeholder-id {
-      width: 70%;
-      height: 70%;
-      border-radius: 22%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 700;
-      font-size: 26px;
-      background: linear-gradient(145deg, #470036, #c7007e);
-      box-shadow:
-        0 10px 30px rgba(131, 24, 67, 0.7),
-        inset 0 0 0 2px rgba(248, 250, 252, 0.08);
+    /* ESTILO: Icono completo ocupando toda la tarjeta */
+    .icon-wrapper .full-icon {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 24px;
+      filter: none;
     }
 
     .tech-label {
@@ -132,7 +129,7 @@
       color: var(--text-muted);
     }
 
-    /* Animación de giro + balanceo al hover */
+    /* Animación de giro + rebote */
     .tech-item:hover .icon-wrapper {
       box-shadow:
         0 18px 40px rgba(15, 23, 42, 1),
@@ -140,128 +137,87 @@
       animation: spin-wobble 0.85s ease-out;
     }
 
-    @keyframes spin-wobble {
-      0% {
-        transform: translateY(0) rotate(0deg);
-      }
-      30% {
-        transform: translateY(-8px) rotate(380deg); /* giro completo + extra */
-      }
-      55% {
-        transform: translateY(-4px) rotate(348deg); /* rebote hacia atrás */
-      }
-      75% {
-        transform: translateY(-6px) rotate(370deg); /* pequeño contra-rebote */
-      }
-      100% {
-        transform: translateY(-2px) rotate(360deg); /* se queda un pelín elevado */
-      }
+    /* Zoom extra solo en los iconos full */
+    .tech-item:hover .full-icon {
+        transform: scale(1.1);
+        transition: transform 0.5s ease;
     }
 
-    /* Pequeño “pop” de entrada opcional */
+    @keyframes spin-wobble {
+      0% { transform: translateY(0) rotate(0deg); }
+      30% { transform: translateY(-8px) rotate(380deg); }
+      55% { transform: translateY(-4px) rotate(348deg); }
+      75% { transform: translateY(-6px) rotate(370deg); }
+      100% { transform: translateY(-2px) rotate(360deg); }
+    }
+
+    /* Entrada suave */
     .tech-item {
       opacity: 0;
       transform: translateY(18px);
       animation: fadeInUp 0.8s ease-out forwards;
     }
 
-    .tech-item:nth-child(1) { animation-delay: 0.02s; }
-    .tech-item:nth-child(2) { animation-delay: 0.06s; }
-    .tech-item:nth-child(3) { animation-delay: 0.10s; }
-    .tech-item:nth-child(4) { animation-delay: 0.14s; }
-    .tech-item:nth-child(5) { animation-delay: 0.18s; }
-    .tech-item:nth-child(6) { animation-delay: 0.22s; }
-    .tech-item:nth-child(7) { animation-delay: 0.26s; }
-    .tech-item:nth-child(8) { animation-delay: 0.30s; }
-    .tech-item:nth-child(9) { animation-delay: 0.34s; }
-    .tech-item:nth-child(10) { animation-delay: 0.38s; }
-    .tech-item:nth-child(11) { animation-delay: 0.42s; }
-    .tech-item:nth-child(12) { animation-delay: 0.46s; }
-    .tech-item:nth-child(13) { animation-delay: 0.50s; }
-    .tech-item:nth-child(14) { animation-delay: 0.54s; }
-
     @keyframes fadeInUp {
-      0% {
-        opacity: 0;
-        transform: translateY(18px);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0);
-      }
+      0% { opacity: 0; transform: translateY(18px); }
+      100% { opacity: 1; transform: translateY(0); }
     }
   </style>
 </head>
+
 <body>
+  <!-- SECCIÓN 1: Tecnologías / Herramientas -->
   <section class="skills-section">
-    <h2 class="skills-title">Tech / Tools</h2>
+    <h2 class="skills-title">Tecnologías / Herramientas</h2>
 
     <div class="skills-grid">
+
       <!-- Fila 1 -->
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/photoshop/photoshop-plain.svg"
-            alt="Photoshop"
-          />
+          <img src="/assets/photoshop.svg" alt="Photoshop" class="full-icon" />
         </div>
         <span class="tech-label">Photoshop</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/illustrator/illustrator-plain.svg"
-            alt="Illustrator"
-          />
+          <img src="/assets/illustrator.svg" alt="Illustrator" class="full-icon" />
         </div>
         <span class="tech-label">Illustrator</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <!-- Placeholder para InDesign (no está en Devicon) -->
-          <div class="placeholder-id">Id</div>
+          <img src="/assets/indesign.svg" alt="InDesign" class="full-icon" />
         </div>
         <span class="tech-label">InDesign</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/html5/html5-original.svg"
-            alt="HTML"
-          />
+          <img src="/assets/html.svg" alt="HTML" class="full-icon" />
         </div>
         <span class="tech-label">HTML</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/css3/css3-original.svg"
-            alt="CSS"
-          />
+          <img src="/assets/css.svg" alt="CSS" class="full-icon" />
         </div>
         <span class="tech-label">CSS</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/javascript/javascript-original.svg"
-            alt="JavaScript"
-          />
+          <img src="/assets/javascript.svg" alt="JavaScript" class="full-icon" />
         </div>
         <span class="tech-label">JavaScript</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/figma/figma-original.svg"
-            alt="Figma"
-          />
+          <img src="/assets/figma.svg" alt="Figma" class="full-icon" />
         </div>
         <span class="tech-label">Figma</span>
       </div>
@@ -269,74 +225,135 @@
       <!-- Fila 2 -->
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/bootstrap/bootstrap-original.svg"
-            alt="Bootstrap"
-          />
+          <img src="/assets/bootstrap.svg" alt="Bootstrap" class="full-icon" />
         </div>
         <span class="tech-label">Bootstrap</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/tailwindcss/tailwindcss-original.svg"
-            alt="Tailwind CSS"
-          />
+          <img src="/assets/tailwind.svg" alt="Tailwind" class="full-icon" />
         </div>
         <span class="tech-label">Tailwind</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/react/react-original.svg"
-            alt="React"
-          />
+          <img src="/assets/react.svg" alt="React" class="full-icon" />
         </div>
         <span class="tech-label">React</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/nextjs/nextjs-original.svg"
-            alt="Next.js"
-          />
+          <img src="/assets/nextjs.svg" alt="Next.js" class="full-icon" />
         </div>
         <span class="tech-label">Next.js</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/nodejs/nodejs-original.svg"
-            alt="Node.js"
-          />
+          <img src="/assets/nodejs.svg" alt="Node.js" class="full-icon" />
         </div>
         <span class="tech-label">Node.js</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/mongodb/mongodb-original.svg"
-            alt="MongoDB"
-          />
+          <img src="/assets/mongodb.svg" alt="MongoDB" class="full-icon" />
         </div>
         <span class="tech-label">MongoDB</span>
       </div>
 
       <div class="tech-item">
         <div class="icon-wrapper">
-          <img
-            src="https://cdn.jsdelivr.net/gh/devicons/devicon@v2.15.1/icons/aframe/aframe-original.svg"
-            alt="A-Frame"
-          />
+          <img src="/assets/aframe.svg" alt="A-Frame" class="full-icon" />
         </div>
         <span class="tech-label">A-Frame</span>
       </div>
+
+      <!-- NUEVOS -->
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/framer.svg" alt="Framer" class="full-icon" />
+        </div>
+        <span class="tech-label">Framer</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/docker.svg" alt="Docker" class="full-icon" />
+        </div>
+        <span class="tech-label">Docker</span>
+      </div>
+
     </div>
   </section>
+
+  <!-- SECCIÓN 2: Inteligencia Artificial -->
+  <section class="skills-section">
+    <h2 class="skills-title">Inteligencia Artificial</h2>
+
+    <div class="skills-grid">
+      
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/lovable.svg" alt="Lovable" class="full-icon" />
+        </div>
+        <span class="tech-label">Lovable</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/midjourney.svg" alt="Midjourney" class="full-icon" />
+        </div>
+        <span class="tech-label">Midjourney</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/adobe-firefly.svg" alt="Adobe Firefly" class="full-icon" />
+        </div>
+        <span class="tech-label">Firefly</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/veo.svg" alt="Veo" class="full-icon" />
+        </div>
+        <span class="tech-label">Veo</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/antigravity.svg" alt="Antigravity" class="full-icon" />
+        </div>
+        <span class="tech-label">Antigravity</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/gpt.svg" alt="GPT" class="full-icon" />
+        </div>
+        <span class="tech-label">GPT</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/gemini.svg" alt="Gemini" class="full-icon" />
+        </div>
+        <span class="tech-label">Gemini</span>
+      </div>
+
+      <div class="tech-item">
+        <div class="icon-wrapper">
+          <img src="/assets/claude.svg" alt="Claude" class="full-icon" />
+        </div>
+        <span class="tech-label">Claude</span>
+      </div>
+
+    </div>
+  </section>
+
 </body>
 </html>
