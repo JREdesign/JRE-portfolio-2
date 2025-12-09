@@ -22,6 +22,13 @@
                 extend: {
                     animation: {
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'shine': 'shine 6s linear infinite', // Animación para el texto
+                    },
+                    keyframes: {
+                        shine: {
+                            '0%': { backgroundPosition: '0% center' },
+                            '100%': { backgroundPosition: '200% center' },
+                        }
                     },
                     spacing: {
                         '128': '32rem',
@@ -29,6 +36,11 @@
                     },
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
+                    },
+                    // Degradado Cotton Candy
+                    backgroundImage: {
+                        'cotton-candy': 'linear-gradient(to right, #f472b6 0%, #60a5fa 15%, #fff5fa 35%, #fff5fa 65%, #60a5fa 85%, #f472b6 100%)',
+                        'blue-glow': 'linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%)',
                     }
                 }
             }
@@ -36,7 +48,7 @@
     </script>
 
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
         /* Ajustes finos para el renderizado de texto y fondo */
         body {
@@ -56,24 +68,18 @@
         ::-webkit-scrollbar-thumb { background: #27272a; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #3f3f46; }
 
-        /* --- GLOWING CARD CSS (Efecto Cristal Restaurado) --- */
+        /* --- GLOWING CARD CSS --- */
         .glowing-card-wrapper {
-            /* Variables de configuración */
             --glow-sens: 30;
             --color-sens: calc(var(--glow-sens) + 20);
             --blend: soft-light;
             --glow-blend: screen;
-            --glow-color: 210deg 100% 60%; /* Azul glow exterior */
-            
-            /* Fondo solicitado */
+            --glow-color: 210deg 100% 60%;
             --card-bg: linear-gradient(to bottom, #111111 0%, #06080d 100%);
-            
-            /* Variables dinámicas JS */
             --pointer-x: 0%;
             --pointer-y: 0%;
             --pointer-deg: 0deg;
             --pointer-d: 0;
-            
             height: 100%;
             width: 100%;
         }
@@ -87,7 +93,6 @@
             isolation: isolate;
             display: grid;
             place-items: center;
-            /* Borde base sutil */
             border: 1px solid rgba(255, 255, 255, 0.1); 
             background: var(--card-bg);
             box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.5);
@@ -106,46 +111,36 @@
             pointer-events: none;
         }
 
-        /* 1. Borde de Color (Mesh Gradient) */
         .glowing-card::before {
             border: 1px solid transparent;
             background:
                 linear-gradient(var(--card-bg) 0 100%) padding-box,
                 linear-gradient(rgba(255,255,255,0) 0% 100%) border-box,
-                /* Manchas de color (Azules/Cian/Violeta para JRE) */
-                radial-gradient(at 80% 55%, hsla(210, 100%, 60%, 1) 0px, transparent 50%) border-box, /* Azul */
-                radial-gradient(at 20% 20%, hsla(190, 100%, 70%, 1) 0px, transparent 50%) border-box, /* Cian */
-                radial-gradient(at 50% 90%, hsla(260, 100%, 65%, 1) 0px, transparent 50%) border-box, /* Violeta */
+                radial-gradient(at 80% 55%, hsla(210, 100%, 60%, 1) 0px, transparent 50%) border-box,
+                radial-gradient(at 20% 20%, hsla(190, 100%, 70%, 1) 0px, transparent 50%) border-box,
+                radial-gradient(at 50% 90%, hsla(260, 100%, 65%, 1) 0px, transparent 50%) border-box,
                 linear-gradient(#1e40af 0 100%) border-box;
-            
             opacity: calc((var(--pointer-d) - var(--color-sens)) / (100 - var(--color-sens)));
             mask-image: conic-gradient(from var(--pointer-deg) at center, black 25%, transparent 40%, transparent 60%, black 75%);
         }
 
-        /* 2. Efecto Cristal Interior (Inner Glass Edge) - LA CLAVE DEL EFECTO */
         .glowing-card::after {
             border: 1px solid transparent;
             background:
                 radial-gradient(at 80% 55%, hsla(210, 100%, 60%, 1) 0px, transparent 50%) padding-box,
                 radial-gradient(at 20% 20%, hsla(190, 100%, 70%, 1) 0px, transparent 50%) padding-box,
                 linear-gradient(#1e40af 0 100%) padding-box;
-            
-            /* Máscaras compuestas para recortar el centro y dejar solo el borde iluminado */
             mask-image:
-                linear-gradient(to bottom, black, black), /* Capa base */
-                conic-gradient(from var(--pointer-deg) at center, transparent 5%, black 15%, black 85%, transparent 95%); /* Recorte cónico */
-            
-            /* Propiedades de composición de máscara estándar y webkit */
+                linear-gradient(to bottom, black, black),
+                conic-gradient(from var(--pointer-deg) at center, transparent 5%, black 15%, black 85%, transparent 95%);
             -webkit-mask-composite: source-out; 
             mask-composite: subtract;
-            
             opacity: calc((var(--pointer-d) - var(--color-sens)) / (100 - var(--color-sens)));
             mix-blend-mode: var(--blend);
         }
 
-        /* 3. Resplandor Exterior (Glow) */
         .glowing-card > .glow {
-            inset: -2px; /* Se expande hacia fuera */
+            inset: -2px;
             opacity: calc((var(--pointer-d) - var(--glow-sens)) / (100 - var(--glow-sens)));
             mix-blend-mode: var(--glow-blend);
             mask-image: conic-gradient(from var(--pointer-deg) at center, black 2.5%, transparent 10%, transparent 90%, black 97.5%);
@@ -156,9 +151,7 @@
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            box-shadow: 
-                inset 0 0 0 1px hsl(var(--glow-color) / 100%),
-                0 0 10px 2px hsl(var(--glow-color) / 50%);
+            box-shadow: inset 0 0 0 1px hsl(var(--glow-color) / 100%), 0 0 10px 2px hsl(var(--glow-color) / 50%);
         }
 
         .glowing-card .inner {
@@ -172,6 +165,145 @@
             height: 100%;
             width: 100%;
         }
+
+        /* --- ESTILOS ICONOS TECH & AI (RESTAURADOS AL ORIGINAL) --- */
+        .tech-grid-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 20px; /* Gap compacto para más densidad */
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .tech-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px; /* Reducido */
+            text-align: center;
+            perspective: 1000px;
+            width: 64px; /* Ancho ajustado al icono */
+        }
+
+        .icon-wrapper {
+            width: 64px; /* Tamaño pequeño */
+            height: 64px; /* Tamaño pequeño */
+            border-radius: 16px; /* Radio ajustado */
+            background: 
+                radial-gradient(circle at 0 0, rgba(59, 130, 246, 0.18), transparent 55%),
+                radial-gradient(circle at 100% 100%, rgba(6, 182, 212, 0.18), transparent 55%),
+                rgba(24, 24, 27, 0.8); /* zinc-900 con transparencia */
+            backdrop-filter: blur(8px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            /* IMPORTANTE: visible para que el icono se salga al hacer zoom */
+            overflow: visible; 
+            box-shadow: 0 8px 24px rgba(15, 23, 42, 0.9), 0 0 0 1px rgba(255, 255, 255, 0.1);
+            transition: transform 0.55s cubic-bezier(.34,1.56,.64,1), box-shadow 0.35s ease;
+            position: relative;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .icon-wrapper .full-icon {
+            width: 100%; /* Ocupa todo el espacio base */
+            height: 100%;
+            object-fit: cover; /* Ajuste original */
+            border-radius: 24px;
+            position: relative;
+            z-index: 10;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.3));
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* Springy transition */
+        }
+
+        /* Hover para Tech (Wobble + Zoom Exagerado) */
+        .tech-item:not(.ai-item):hover .icon-wrapper {
+            box-shadow: 0 18px 40px rgba(15, 23, 42, 1), 0 0 0 1px rgba(56, 189, 248, 0.45);
+            background: rgba(24, 24, 27, 0.95);
+            animation: spin-wobble 0.85s ease-out;
+        }
+        
+        .tech-item:not(.ai-item):hover .full-icon {
+            transform: scale(1.6); /* Zoom "Pop-out" MUY fuerte para que se vea bien el SVG al salir */
+        }
+
+        @keyframes spin-wobble {
+            0% { transform: translateY(0) rotate(0deg); }
+            30% { transform: translateY(-8px) rotate(380deg); } 
+            55% { transform: translateY(-4px) rotate(348deg); }
+            75% { transform: translateY(-6px) rotate(370deg); }
+            100% { transform: translateY(-2px) rotate(360deg); }
+        }
+
+        /* Hover para IA (3D + Zoom) */
+        .ai-item:hover .icon-wrapper {
+            transition: transform 0.1s ease-out, box-shadow 0.3s ease; 
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8), 0 0 0 1px rgba(255, 255, 255, 0.2);
+            background: rgba(24, 24, 27, 0.95);
+        }
+        
+        /* Zoom al icono IA también */
+        .ai-item:hover .full-icon {
+            transform: scale(1.6); 
+             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* Efectos de IA (Shine, Glare, Sparks) */
+        .card-shine {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 16px; /* Ajustado */
+            z-index: 2;
+            background: linear-gradient(115deg, transparent 20%, rgba(255, 0, 150, 0.25) 30%, rgba(0, 255, 255, 0.25) 45%, rgba(255, 255, 0, 0.25) 55%, transparent 70%);
+            background-size: 300% 300%;
+            opacity: 0;
+            mix-blend-mode: color-dodge;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .card-glare {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            border-radius: 16px; /* Ajustado */
+            z-index: 3;
+            background: radial-gradient(farthest-corner circle at var(--pointer-x, 50%) var(--pointer-y, 50%), rgba(255, 255, 255, 0.6) 0%, rgba(255, 255, 255, 0.2) 30%, rgba(255, 255, 255, 0) 60%);
+            opacity: 0;
+            mix-blend-mode: overlay;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+
+        .ai-item:hover .card-shine { opacity: 0.6; }
+        .ai-item:hover .card-glare { opacity: 1; }
+
+        .sparks-container {
+            position: absolute;
+            inset: 0;
+            border-radius: 16px; /* Ajustado */
+            overflow: hidden;
+            z-index: 5;
+            pointer-events: none;
+        }
+
+        .spark {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            background: #ffff00;
+            border-radius: 50%;
+            box-shadow: 0 0 4px #ffff00, 0 0 8px #ffff00, 0 0 10px #00ffff;
+            animation: sparkRise 0.6s ease-out forwards;
+        }
+
+        @keyframes sparkRise {
+            0% { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-100px) translateX(var(--drift)) scale(0.3); opacity: 0; }
+        }
     </style>
 </head>
 <body>
@@ -182,46 +314,14 @@
     <script type="text/babel">
         const { useState, useEffect, useRef } = React;
 
-        // --- FUNCIONES MATEMÁTICAS (Clamp, Round, Ángulos) ---
+        // --- FUNCIONES MATEMÁTICAS ---
         const clamp = (value, min = 0, max = 100) => Math.min(Math.max(value, min), max);
         const round = (value, precision = 3) => parseFloat(value.toFixed(precision));
-
-        const centerOfElement = (element) => {
-            const { width, height } = element.getBoundingClientRect();
-            return [width / 2, height / 2];
-        };
-
-        const distanceFromCenter = (element, x, y) => {
-            const [cx, cy] = centerOfElement(element);
-            return [x - cx, y - cy];
-        };
-
-        const angleFromPointerEvent = (dx, dy) => {
-            let angleDegrees = 0;
-            if (dx !== 0 || dy !== 0) {
-                const angleRadians = Math.atan2(dy, dx);
-                angleDegrees = angleRadians * (180 / Math.PI) + 90;
-                if (angleDegrees < 0) angleDegrees += 360;
-            }
-            return angleDegrees;
-        };
-
-        const closenessToEdge = (element, x, y) => {
-            const [cx, cy] = centerOfElement(element);
-            const [dx, dy] = distanceFromCenter(element, x, y);
-            let k_x = dx !== 0 ? cx / Math.abs(dx) : Infinity;
-            let k_y = dy !== 0 ? cy / Math.abs(dy) : Infinity;
-            return clamp((1 / Math.min(k_x, k_y)), 0, 1);
-        };
-
-        const pointerPositionRelativeToElement = (element, e) => {
-            const { left, top, width, height } = element.getBoundingClientRect();
-            const x = e.clientX - left;
-            const y = e.clientY - top;
-            const px = clamp((100 / width) * x);
-            const py = clamp((100 / height) * y);
-            return { pixels: [x, y], percent: [px, py] };
-        };
+        const centerOfElement = (el) => { const { width, height } = el.getBoundingClientRect(); return [width / 2, height / 2]; };
+        const distanceFromCenter = (el, x, y) => { const [cx, cy] = centerOfElement(el); return [x - cx, y - cy]; };
+        const angleFromPointerEvent = (dx, dy) => { let angle = 0; if (dx !== 0 || dy !== 0) { angle = Math.atan2(dy, dx) * (180 / Math.PI) + 90; if (angle < 0) angle += 360; } return angle; };
+        const closenessToEdge = (el, x, y) => { const [cx, cy] = centerOfElement(el); const [dx, dy] = distanceFromCenter(el, x, y); return clamp((1 / Math.min(dx !== 0 ? cx / Math.abs(dx) : Infinity, dy !== 0 ? cy / Math.abs(dy) : Infinity)), 0, 1); };
+        const pointerPositionRelativeToElement = (el, e) => { const { left, top, width, height } = el.getBoundingClientRect(); const x = e.clientX - left; const y = e.clientY - top; return { pixels: [x, y], percent: [clamp((100 / width) * x), clamp((100 / height) * y)] }; };
 
         // --- ICONOS SVG ---
         const FileText = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/><polyline points="14 2 14 8 20 8"/><line x1="16" x2="8" y1="13" y2="13"/><line x1="16" x2="8" y1="17" y2="17"/><line x1="10" x2="8" y1="9" y2="9"/></svg>);
@@ -232,13 +332,9 @@
         const Palette = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.01 17.461 2 12 2z"/></svg>);
         const Search = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>);
         const CheckCircle = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>);
-        
-        // Iconos Cards
         const BadgeCheck = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M3.85 8.62a4 4 0 0 1 4.78-4.77 4 4 0 0 1 6.74 0 4 4 0 0 1 4.78 4.78 4 4 0 0 1 0 6.74 4 4 0 0 1-4.78 4.78 4 4 0 0 1-6.74 0 4 4 0 0 1-4.78-4.78 4 4 0 0 1 0-6.74Z"/><path d="m9 12 2 2 4-4"/></svg>);
         const Layout = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="18" height="18" x="3" y="3" rx="2" ry="2"/><line x1="3" x2="21" y1="9" y2="9"/><line x1="9" x2="9" y1="21" y2="9"/></svg>);
         const Code = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>);
-        
-        // Iconos Stats
         const Briefcase = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><rect width="20" height="14" x="2" y="7" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>);
         const Users = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>);
         const Award = ({ className }) => (<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className={className}><path d="m15.477 12.89 1.515 8.526a.5.5 0 0 1-.81.47l-3.58-2.687a1 1 0 0 0-1.197 0l-3.586 2.686a.5.5 0 0 1-.81-.469l1.514-8.526"/><circle cx="12" cy="8" r="6"/></svg>);
@@ -246,11 +342,7 @@
 
         // --- COMPONENTES LOGO ---
         const JRELogo = ({ className }) => (
-            <img 
-                src="logo.svg" 
-                alt="JRE Logo" 
-                className={`${className} transition-all duration-500 ease-out hover:drop-shadow-[0_0_35px_rgba(59,130,246,0.7)] hover:scale-105`}
-            />
+            <img src="logo.svg" alt="JRE Logo" className={`${className} transition-all duration-500 ease-out hover:drop-shadow-[0_0_35px_rgba(59,130,246,0.7)] hover:scale-105`} />
         );
 
         // --- CUSTOM HOOKS ---
@@ -267,16 +359,11 @@
             return [ref, isInView];
         };
 
-        // --- TARJETA GENÉRICA ESTILO DARK GLOW (Usada en Sobre Mí) ---
+        // --- TARJETA GENÉRICA ESTILO DARK GLOW ---
         const CardStyle = ({ icon: Icon, title, description, delay, centered = true }) => {
             const [ref, isInView] = useInView({ threshold: 0.2 });
-
             return (
-                <div 
-                    ref={ref}
-                    className={`transition-all duration-700 transform ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                    style={{ transitionDelay: `${delay}ms` }}
-                >
+                <div ref={ref} className={`transition-all duration-700 transform ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${delay}ms` }}>
                     <div className={`flex flex-col ${centered ? 'items-center text-center' : 'items-start text-left'} justify-center p-8 h-full min-h-[280px] rounded-2xl border border-blue-500/60 bg-[linear-gradient(to_bottom,#111111_0%,#06080d_100%)] transition-all duration-300 hover:shadow-[0_0_20px_rgba(59,130,246,0.4)] group hover:-translate-y-1`}>
                         <Icon className={`w-12 h-12 text-white mb-6 stroke-[1.5] group-hover:scale-110 transition-transform duration-300`} />
                         <h3 className="text-white font-bold text-xl mb-3 leading-tight whitespace-pre-line">{title}</h3>
@@ -286,46 +373,32 @@
             );
         };
 
-        // --- COMPONENTE GLOWING SERVICE CARD (Efecto Cristal) ---
+        // --- COMPONENTE GLOWING SERVICE CARD ---
         const GlowingServiceCard = ({ title, description, delay }) => {
             const cardRef = useRef(null);
             const [ref, isInView] = useInView({ threshold: 0.2 });
-
             const handlePointerMove = (e) => {
                 const card = cardRef.current;
                 if (!card) return;
-                
                 const { pixels, percent } = pointerPositionRelativeToElement(card, e);
                 const [px, py] = pixels;
                 const [perx, pery] = percent;
                 const [dx, dy] = distanceFromCenter(card, px, py);
                 const edge = closenessToEdge(card, px, py);
                 const angle = angleFromPointerEvent(dx, dy);
-
                 card.style.setProperty('--pointer-x', `${round(perx)}%`);
                 card.style.setProperty('--pointer-y', `${round(pery)}%`);
                 card.style.setProperty('--pointer-deg', `${round(angle)}deg`);
                 card.style.setProperty('--pointer-d', `${round(edge * 100)}`);
             };
-
             return (
-                <div 
-                    ref={ref}
-                    className={`glowing-card-wrapper transition-all duration-700 transform ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`}
-                    style={{ transitionDelay: `${delay}ms` }}
-                >
-                    <div 
-                        ref={cardRef} 
-                        className="glowing-card group"
-                        onPointerMove={handlePointerMove}
-                    >
+                <div ref={ref} className={`glowing-card-wrapper transition-all duration-700 transform ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'}`} style={{ transitionDelay: `${delay}ms` }}>
+                    <div ref={cardRef} className="glowing-card group" onPointerMove={handlePointerMove}>
                         <span className="glow"></span>
                         <div className="inner">
-                            {/* Icono temático */}
                             {title.includes('UI') ? <Layout className="w-12 h-12 text-blue-400 mb-4 stroke-[1.5]" /> : 
                              title.includes('Code') || title.includes('Development') ? <Code className="w-12 h-12 text-blue-400 mb-4 stroke-[1.5]" /> :
                              <BadgeCheck className="w-12 h-12 text-blue-400 mb-4 stroke-[1.5]" />}
-                            
                             <h3 className="text-white font-bold text-2xl mb-4">{title}</h3>
                             <p className="text-zinc-400 text-sm leading-relaxed">{description}</p>
                         </div>
@@ -337,7 +410,6 @@
         // --- BARRA DE HABILIDADES ---
         const SkillBar = ({ name, percentage, delay }) => {
             const [ref, isInView] = useInView({ threshold: 0.2 });
-            
             return (
                 <div ref={ref} className="mb-6 last:mb-0">
                     <div className="flex justify-between items-end mb-2">
@@ -345,13 +417,78 @@
                         <span className="text-blue-400 font-bold text-sm">{percentage}%</span>
                     </div>
                     <div className="h-1.5 w-full bg-zinc-800/50 rounded-full overflow-hidden">
-                        <div 
-                            className="h-full bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full transition-all duration-[1500ms] ease-out shadow-[0_0_10px_rgba(59,130,246,0.5)]"
-                            style={{ 
-                                width: isInView ? `${percentage}%` : '0%',
-                                transitionDelay: `${delay}ms`
-                            }} 
-                        />
+                        <div className="h-full bg-gradient-to-r from-blue-600 to-cyan-400 rounded-full transition-all duration-[1500ms] ease-out shadow-[0_0_10px_rgba(59,130,246,0.5)]" style={{ width: isInView ? `${percentage}%` : '0%', transitionDelay: `${delay}ms` }} />
+                    </div>
+                </div>
+            );
+        };
+
+        // --- COMPONENTE PROCESS STEP (NUEVO) ---
+        const ProcessStep = ({ number, title, description, delay, isLast }) => {
+            const [ref, isInView] = useInView({ threshold: 0.2 });
+            return (
+                <div 
+                    ref={ref}
+                    className={`flex flex-col items-center text-center p-6 transition-all duration-1000 transform relative ${isInView ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-12'}`}
+                    style={{ transitionDelay: `${delay}ms` }}
+                >
+                    <div className="relative mb-6 w-full flex justify-center">
+                        {/* Glow effect behind number */}
+                        <div className="absolute inset-0 bg-blue-500 blur-xl opacity-20 rounded-full w-16 h-16 mx-auto"></div>
+                        <div className="relative w-16 h-16 rounded-full bg-gradient-to-br from-blue-600 to-cyan-400 p-[2px] shadow-lg shadow-blue-500/20 z-10">
+                            <div className="w-full h-full rounded-full bg-zinc-900 flex items-center justify-center">
+                                <span className="text-xl font-bold text-white font-mono">{number}</span>
+                            </div>
+                        </div>
+                        {/* Connecting line (only for desktop and not the last item) */}
+                        {!isLast && (
+                            <div className="hidden lg:block absolute top-1/2 left-1/2 w-full h-[2px] bg-zinc-800 -z-0 transform -translate-y-1/2"></div>
+                        )}
+                    </div>
+                    
+                    <h3 className="text-white font-bold text-xl mb-3">{title}</h3>
+                    <p className="text-zinc-400 text-sm leading-relaxed">{description}</p>
+                </div>
+            );
+        };
+
+        // --- COMPONENTE TECH STACK ---
+        const TechStack = () => {
+            const tools = [
+                { name: "Photoshop", icon: "assets/photoshop.svg" }, { name: "Illustrator", icon: "assets/illustrator.svg" }, { name: "InDesign", icon: "assets/indesign.svg" }, { name: "HTML", icon: "assets/html.svg" }, { name: "CSS", icon: "assets/css.svg" }, { name: "JavaScript", icon: "assets/javascript.svg" }, { name: "Figma", icon: "assets/figma.svg" }, { name: "Bootstrap", icon: "assets/bootstrap.svg" }, { name: "Tailwind", icon: "assets/tailwind.svg" }, { name: "React", icon: "assets/react.svg" }, { name: "Next.js", icon: "assets/nextjs.svg" }, { name: "Node.js", icon: "assets/nodejs.svg" }, { name: "MongoDB", icon: "assets/mongodb.svg" }, { name: "A-Frame", icon: "assets/aframe.svg" }, { name: "Framer", icon: "assets/framer.svg" }, { name: "Docker", icon: "assets/docker.svg" }
+            ];
+            const aiTools = [
+                { name: "Lovable", icon: "assets/lovable.svg" }, { name: "Midjourney", icon: "assets/midjourney.svg" }, { name: "Firefly", icon: "assets/adobe-firefly.svg" }, { name: "Veo", icon: "assets/veo.svg" }, { name: "Antigravity", icon: "assets/antigravity.svg" }, { name: "GPT", icon: "assets/gpt.svg" }, { name: "Gemini", icon: "assets/gemini.svg" }, { name: "Claude", icon: "assets/claude.svg" }
+            ];
+            useEffect(() => {
+                const aiItems = document.querySelectorAll('.ai-item');
+                aiItems.forEach(item => {
+                    const wrapper = item.querySelector('.icon-wrapper');
+                    let sparkInterval;
+                    const shine = document.createElement('div'); shine.className = 'card-shine'; wrapper.appendChild(shine);
+                    const glare = document.createElement('div'); glare.className = 'card-glare'; wrapper.appendChild(glare);
+                    const sparksContainer = document.createElement('div'); sparksContainer.className = 'sparks-container'; wrapper.appendChild(sparksContainer);
+                    const createSpark = () => {
+                        const spark = document.createElement('div'); spark.className = 'spark'; spark.style.left = Math.random() * 88 + 'px'; spark.style.bottom = '0px'; spark.style.setProperty('--drift', (Math.random() - 0.5) * 40 + 'px'); sparksContainer.appendChild(spark); setTimeout(() => spark.remove(), 600);
+                    };
+                    const handleMove = (e) => {
+                        const rect = wrapper.getBoundingClientRect(); const x = e.clientX - rect.left; const y = e.clientY - rect.top; const centerX = rect.width / 2; const centerY = rect.height / 2; const rotateX = ((y - centerY) / centerY) * -12; const rotateY = ((x - centerX) / centerX) * 12;
+                        wrapper.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale(1.05)`; shine.style.backgroundPosition = `${(x / rect.width) * 100}% ${(y / rect.height) * 100}%`; wrapper.style.setProperty('--pointer-x', `${x}px`); wrapper.style.setProperty('--pointer-y', `${y}px`);
+                    };
+                    item.addEventListener('mousemove', handleMove);
+                    item.addEventListener('mouseenter', () => { sparkInterval = setInterval(createSpark, 60); createSpark(); });
+                    item.addEventListener('mouseleave', () => { clearInterval(sparkInterval); sparksContainer.innerHTML = ''; wrapper.style.transform = 'rotateX(0) rotateY(0) scale(1)'; });
+                });
+            }, []);
+            return (
+                <div className="w-full mt-24 space-y-20">
+                    <div>
+                        <h3 className="text-3xl font-extrabold mb-8 flex items-center gap-2 bg-clip-text text-transparent bg-cotton-candy animate-shine bg-[length:200%_auto]"><span className="w-8 h-1 bg-blue-500 rounded-full"></span>Tecnologías / Herramientas</h3>
+                        <div className="tech-grid-container">{tools.map((tool, i) => (<div key={i} className="tech-item"><div className="icon-wrapper"><img src={tool.icon} alt={tool.name} className="full-icon" onError={(e) => e.target.style.display='none'} /></div><span className="text-zinc-400 text-sm mt-2 font-medium tracking-wide">{tool.name}</span></div>))}</div>
+                    </div>
+                    <div>
+                        <h3 className="text-3xl font-extrabold mb-8 flex items-center gap-2 bg-clip-text text-transparent bg-cotton-candy animate-shine bg-[length:200%_auto]"><span className="w-8 h-1 bg-blue-500 rounded-full"></span>Inteligencia Artificial</h3>
+                        <div className="tech-grid-container">{aiTools.map((tool, i) => (<div key={i} className="tech-item ai-item"><div className="icon-wrapper"><img src={tool.icon} alt={tool.name} className="full-icon" onError={(e) => e.target.style.display='none'} /></div><span className="text-zinc-400 text-sm mt-2 font-medium tracking-wide">{tool.name}</span></div>))}</div>
                     </div>
                 </div>
             );
@@ -360,52 +497,18 @@
         // --- COMPONENTE NAVBAR ---
         const Navbar = () => {
             const [isScrolled, setIsScrolled] = useState(false);
-
-            useEffect(() => {
-                const handleScroll = () => {
-                    setIsScrolled(window.scrollY > 50);
-                };
-                window.addEventListener('scroll', handleScroll);
-                return () => window.removeEventListener('scroll', handleScroll);
-            }, []);
-
-            const scrollToTop = (e) => {
-                e.preventDefault();
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            };
-
-            const navLinks = [
-                { name: 'Sobre mí', href: '#sobre-mi' },
-                { name: 'Habilidades', href: '#habilidades' },
-                { name: 'Trayectoria', href: '#trayectoria' },
-                { name: 'Portfolio', href: '#portfolio' },
-                { name: 'Servicios', href: '#servicios' },
-                { name: 'Contacto', href: '#contacto' },
-            ];
-
+            useEffect(() => { const handleScroll = () => setIsScrolled(window.scrollY > 50); window.addEventListener('scroll', handleScroll); return () => window.removeEventListener('scroll', handleScroll); }, []);
+            const scrollToTop = (e) => { e.preventDefault(); window.scrollTo({ top: 0, behavior: 'smooth' }); };
+            const navLinks = [ { name: 'Sobre mí', href: '#sobre-mi' }, { name: 'Habilidades', href: '#habilidades' }, { name: 'Trayectoria', href: '#trayectoria' }, { name: 'Portfolio', href: '#portfolio' }, { name: 'Servicios', href: '#servicios' }, { name: 'Contacto', href: '#contacto' } ];
             return (
                 <nav className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${isScrolled ? 'bg-zinc-950/80 backdrop-blur-md py-4 shadow-lg border-b border-zinc-800' : 'bg-transparent py-6'}`}>
                     <div className="max-w-[1400px] mx-auto px-6 flex items-center justify-between">
                         <div className="flex items-center gap-3 md:gap-4">
-                            <a href="#inicio" onClick={scrollToTop} className="cursor-pointer">
-                                <img src="logo color.svg" alt="JRE Logo Color" className="h-10 w-auto" onError={(e) => {e.target.style.display='none'; e.target.nextSibling.style.display='block'}} />
-                                <div className="hidden text-xs font-bold text-zinc-500">Logo</div>
-                            </a>
-                            <div className="text-white font-medium text-sm leading-tight tracking-tight cursor-default">
-                                JRΞdesign <span className="font-normal text-zinc-400">| Diseño gráfico y Desarrollo web</span>
-                            </div>
+                            <a href="#inicio" onClick={scrollToTop} className="cursor-pointer"><img src="logo color.svg" alt="JRE Logo Color" className="h-10 w-auto" onError={(e) => {e.target.style.display='none'; e.target.nextSibling.style.display='block'}} /><div className="hidden text-xs font-bold text-zinc-500">Logo</div></a>
+                            <div className="text-white font-medium text-sm leading-tight tracking-tight cursor-default">JRΞdesign <span className="font-normal text-zinc-400">| Diseño gráfico y Desarrollo web</span></div>
                         </div>
-                        <div className="hidden md:flex items-center gap-8">
-                            {navLinks.map((link) => (
-                                <a key={link.name} href={link.href} className="text-sm font-medium text-zinc-300 hover:text-blue-500 transition-colors duration-300 relative group">
-                                    {link.name}
-                                    <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span>
-                                </a>
-                            ))}
-                        </div>
-                        <div className="md:hidden text-zinc-300 hover:text-white cursor-pointer">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg>
-                        </div>
+                        <div className="hidden md:flex items-center gap-8">{navLinks.map((link) => (<a key={link.name} href={link.href} className="text-sm font-medium text-zinc-300 hover:text-blue-500 transition-colors duration-300 relative group">{link.name}<span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-blue-500 transition-all duration-300 group-hover:w-full"></span></a>))}</div>
+                        <div className="md:hidden text-zinc-300 hover:text-white cursor-pointer"><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-8 h-8"><path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5" /></svg></div>
                     </div>
                 </nav>
             );
@@ -414,11 +517,7 @@
         // --- HERO & UTILS ---
         const DrawingTransformation = ({ initialIcon: InitialIcon, finalIcon: FinalIcon, label, delay, x, y, rotation = 0 }) => {
             const [stage, setStage] = useState(0); 
-            useEffect(() => {
-                const cycle = () => { setStage(0); setTimeout(() => setStage(1), 500); setTimeout(() => setStage(2), 3500); };
-                const startTimeout = setTimeout(() => { cycle(); const interval = setInterval(cycle, 9000); return () => clearInterval(interval); }, delay);
-                return () => clearTimeout(startTimeout);
-            }, [delay]);
+            useEffect(() => { const cycle = () => { setStage(0); setTimeout(() => setStage(1), 500); setTimeout(() => setStage(2), 3500); }; const startTimeout = setTimeout(() => { cycle(); const interval = setInterval(cycle, 9000); return () => clearInterval(interval); }, delay); return () => clearTimeout(startTimeout); }, [delay]);
             return (
                 <div className="absolute transition-all duration-1000 ease-in-out z-0 pointer-events-none select-none" style={{ top: y, left: x, transform: `rotate(${rotation}deg)` }}>
                     <div className={`relative w-20 h-28 md:w-28 md:h-40 rounded-lg backdrop-blur-md transition-all duration-1000 ${stage === 2 ? 'bg-zinc-800/40 border-zinc-500/50 shadow-2xl shadow-blue-900/20 scale-110 -translate-y-4' : 'bg-zinc-900/10 border-zinc-800 scale-100 border border-dashed'}`}>
@@ -454,10 +553,7 @@
                         <div className="hidden md:block"><DrawingTransformation initialIcon={PenTool} finalIcon={Palette} label="DISEÑO" delay={4000} x="12%" y="65%" rotation={-3} /></div>
                     </div>
                     <div className="relative z-20 text-center px-4 max-w-5xl mx-auto pt-20">
-                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 text-zinc-400 text-xs font-mono mb-8 animate-[fadeIn_1s_ease-out]">
-                            <span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span></span>
-                            Open to work
-                        </div>
+                        <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full border border-zinc-800 bg-zinc-900/50 text-zinc-400 text-xs font-mono mb-8 animate-[fadeIn_1s_ease-out]"><span className="relative flex h-2 w-2"><span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-blue-400 opacity-75"></span><span className="relative inline-flex rounded-full h-2 w-2 bg-blue-500"></span></span>Open to work</div>
                         <h1 className="flex flex-wrap items-center justify-center gap-4 md:gap-8 text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-bold tracking-tighter text-white mb-8 leading-[1.05] drop-shadow-2xl">
                             <JRELogo className="h-32 w-32 sm:h-40 sm:w-40 md:h-60 md:w-60 lg:h-80 lg:w-80 mb-2 md:mb-0" />
                             <span className="underline decoration-blue-500 decoration-4 underline-offset-4 md:underline-offset-8">design</span>
@@ -475,7 +571,7 @@
         const Section = ({ id, title, children, bgColor = "bg-transparent", titleCenter = true }) => (
             <section id={id} className={`min-h-screen flex flex-col items-center justify-center relative z-20 px-6 py-24 ${bgColor}`}>
                 <div className="max-w-4xl w-full">
-                    <h2 className={`text-4xl md:text-5xl font-bold mb-12 text-white flex items-center gap-4 ${titleCenter ? 'justify-center' : ''}`}><span className="w-12 h-1 bg-blue-500 rounded-full"></span>{title}</h2>
+                    <h2 className={`text-5xl md:text-7xl font-extrabold mb-12 flex items-center gap-4 ${titleCenter ? 'justify-center' : ''} bg-clip-text text-transparent bg-cotton-candy animate-shine bg-[length:200%_auto]`}><span className="w-12 h-1 bg-blue-500 rounded-full"></span>{title}</h2>
                     <div className="text-zinc-400 text-lg leading-relaxed w-full">{children}</div>
                 </div>
             </section>
@@ -484,16 +580,9 @@
         // --- APP ---
         const App = () => {
             const skillsData = [
-                { name: "Diseño Gráfico", pct: 95 },
-                { name: "Branding & Identidad", pct: 92 },
-                { name: "UI/UX Design", pct: 85 },
-                { name: "Desarrollo Web", pct: 78 },
-                { name: "Ilustración", pct: 88 },
-                { name: "Comunicación Institucional", pct: 90 },
-                { name: "Diseño editorial y maquetación", pct: 94 },
-                { name: "Diseño de elementos digitales y uso de IA", pct: 88 }
+                { name: "Diseño Gráfico", pct: 95 }, { name: "Branding & Identidad", pct: 92 }, { name: "UI/UX Design", pct: 85 }, { name: "Desarrollo Web", pct: 78 },
+                { name: "Ilustración", pct: 88 }, { name: "Comunicación Institucional", pct: 90 }, { name: "Diseño editorial y maquetación", pct: 94 }, { name: "Diseño de elementos digitales y uso de IA", pct: 88 }
             ];
-
             return (
                 <div className="relative bg-zinc-950">
                     <div className="fixed inset-0 z-0 opacity-20 pointer-events-none bg-grid-pattern"></div>
@@ -515,13 +604,10 @@
                             </div>
                         </Section>
 
-                        <Section id="habilidades" title="Habilidades y especialidades" titleCenter={false}>
+                        <Section id="habilidades" title="Habilidades" titleCenter={false}>
                             <p className="mb-12 text-zinc-400">Mi experiencia abarca múltiples disciplinas del diseño y la comunicación visual.</p>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-                                {skillsData.map((skill, i) => (
-                                    <SkillBar key={i} name={skill.name} percentage={skill.pct} delay={i * 100} />
-                                ))}
-                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">{skillsData.map((skill, i) => (<SkillBar key={i} name={skill.name} percentage={skill.pct} delay={i * 100} />))}</div>
+                            <TechStack />
                         </Section>
 
                         <Section id="trayectoria" title="Trayectoria" titleCenter={false}>
@@ -538,16 +624,48 @@
                         </Section>
 
                         <Section id="portfolio" title="Portfolio" titleCenter={false}>
-                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                                {[1, 2, 3, 4].map((item) => (
-                                    <div key={item} className="group relative aspect-video bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden cursor-pointer hover:border-blue-500/50 transition-all">
-                                        <div className="absolute inset-0 flex items-center justify-center text-zinc-700 group-hover:text-blue-500 transition-colors"><span className="text-4xl font-bold">Proyecto {item}</span></div>
-                                    </div>
-                                ))}
-                            </div>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">{[1, 2, 3, 4].map((item) => (<div key={item} className="group relative aspect-video bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden cursor-pointer hover:border-blue-500/50 transition-all"><div className="absolute inset-0 flex items-center justify-center text-zinc-700 group-hover:text-blue-500 transition-colors"><span className="text-4xl font-bold">Proyecto {item}</span></div></div>))}</div>
                         </Section>
 
                         <Section id="servicios" title="Servicios" titleCenter={false}>
+                            
+                            {/* --- SECCIÓN METODOLOGÍA (NUEVA) --- */}
+                            
+                            <div className="mb-16 text-center animate-fade-in-up">
+                                <h3 className="text-3xl font-bold text-white mb-4">Mi Proceso de Trabajo</h3>
+                                <p className="text-zinc-400 text-lg max-w-3xl mx-auto leading-relaxed">
+                                    Soluciones integrales de diseño y comunicación visual para empresas, instituciones y emprendedores que buscan destacar en su mercado.
+                                </p>
+                            </div>
+
+                            <div className="mb-24 grid grid-cols-1 md:grid-cols-4 gap-8">
+                                <ProcessStep 
+                                    number="01"
+                                    title="Estrategia Primero"
+                                    description="Cada proyecto comienza con una comprensión profunda de tus objetivos y audiencia."
+                                    delay={0}
+                                />
+                                <ProcessStep 
+                                    number="02"
+                                    title="Diseño Centrado en Resultados"
+                                    description="No solo creamos algo bonito, sino algo que funciona y genera impacto."
+                                    delay={200}
+                                />
+                                <ProcessStep 
+                                    number="03"
+                                    title="Implementación Completa"
+                                    description="Desde la conceptualización hasta la entrega final con todos los archivos necesarios."
+                                    delay={400}
+                                />
+                                <ProcessStep 
+                                    number="04"
+                                    title="Soporte Continuo"
+                                    description="Te acompaño en la implementación y evolución de tu identidad visual."
+                                    delay={600}
+                                    isLast={true}
+                                />
+                            </div>
+
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
                                 <GlowingServiceCard title="UI Design" description="Interfaces limpias y modernas que comunican la identidad de tu marca." delay={0} />
                                 <GlowingServiceCard title="Development" description="Código limpio, rápido y escalable usando las últimas tecnologías." delay={200} />
