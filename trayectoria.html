@@ -30,21 +30,16 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
-        /* --- VARIABLES DEL EFECTO ELÉCTRICO --- */
+        /* --- VARIABLES --- */
         :root {
-            /* Usamos el azul eléctrico del ejemplo */
             --electric-border-color: #3aa3ff;
-            /* Fallback para navegadores que no soporten oklch */
             --electric-light-color: #8ccaff; 
-            --color-neutral-900: #18181b; /* Zinc-900 approx */
+            --color-neutral-900: #18181b; 
         }
         
-        /* Soporte moderno para colores */
         @supports (color: oklch(0 0 0)) {
             :root {
                 --electric-light-color: oklch(from var(--electric-border-color) l c h);
-                --gradient-color: oklch(from var(--electric-border-color) 0.3 calc(c / 2) h / 0.4);
-                --color-neutral-900: oklch(0.185 0 0);
             }
         }
 
@@ -110,7 +105,7 @@
         /* Línea Central */
         .timeline-line-container {
             position: absolute;
-            left: 24px;
+            left: 24px; /* Mobile: línea a la izquierda */
             top: 0;
             bottom: 0;
             width: 2px;
@@ -132,7 +127,7 @@
 
         .timeline-item {
             position: relative;
-            margin-bottom: 4rem;
+            margin-bottom: 5rem; /* Más espacio vertical por los logos */
             width: 100%;
             display: flex;
             opacity: 0;
@@ -144,159 +139,179 @@
             transform: translateX(0) !important;
         }
 
-        /* Icono (punto) */
-        .timeline-dot {
-            position: absolute;
-            left: 24px;
-            top: 0;
-            transform: translateX(-50%);
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            background: #09090b;
-            border: 2px solid #3b82f6;
-            z-index: 10;
-            box-shadow: 0 0 0 4px rgba(9, 9, 11, 1);
-            transition: all 0.3s ease;
-        }
-
         /* Contenido (Tarjeta Standard) */
         .timeline-content {
-            margin-left: 60px;
+            margin-left: 60px; /* Espacio para línea en mobile */
             padding: 1.5rem;
             background: rgba(39, 39, 42, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 12px;
+            border-radius: 16px;
             backdrop-filter: blur(8px);
             width: calc(100% - 60px);
             transition: all 0.4s ease;
             position: relative;
+            
+            /* Flex para layout Logo/Texto */
+            display: flex;
+            flex-direction: column; /* Mobile: Columna */
+            gap: 1rem;
+        }
+
+        /* Logo Container */
+        .logo-container {
+            width: 64px;
+            height: 64px;
+            flex-shrink: 0;
+            border-radius: 12px;
+            background: #18181b;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px;
+            transition: all 0.4s ease;
+        }
+        
+        .logo-container img, 
+        .logo-container svg {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            opacity: 0.7;
+            transition: opacity 0.3s;
+        }
+
+        /* Texto Container */
+        .text-container {
+            flex-grow: 1;
         }
 
         /* --- ESTILOS ACTIVOS (Borde iluminado Standard) --- */
         .timeline-item.active .timeline-content {
             background: rgba(39, 39, 42, 0.7);
-            border-right: 2px solid #3b82f6;
-            box-shadow: 10px 0 20px -5px rgba(59, 130, 246, 0.2);
             border-color: rgba(255, 255, 255, 0.1);
+            /* En mobile, borde derecho simple */
+            border-right: 2px solid #3b82f6; 
+            box-shadow: 10px 0 20px -5px rgba(59, 130, 246, 0.2);
         }
         
-        .timeline-item.active .timeline-dot {
-            background: #3b82f6;
-            box-shadow: 0 0 15px rgba(59, 130, 246, 0.6), 0 0 0 4px #09090b;
+        /* Activar Logo al pasar */
+        .timeline-item.active .logo-container {
+            border-color: #3b82f6;
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.3);
+            background: #09090b;
         }
-
+        .timeline-item.active .logo-container img,
+        .timeline-item.active .logo-container svg {
+            opacity: 1;
+        }
 
         /* =========================================
-           ESTILOS EFECTO ELÉCTRICO (Última Tarjeta)
+           EFECTO ELÉCTRICO (Última Tarjeta)
            ========================================= */
-        
-        /* Contenedor relativo para posicionar capas */
         .electric-card-container {
             position: relative;
-            border-radius: 12px; /* Coincide con timeline-content */
-            overflow: visible; /* Necesario para que el glow salga */
+            border-radius: 24px; 
+            overflow: visible; 
+            transform-style: preserve-3d;
         }
 
-        /* Capa contenedora de los efectos */
         .electric-layers {
             position: absolute;
-            top: -2px; left: -2px; right: -2px; bottom: -2px;
-            border-radius: 14px;
+            inset: -4px;
+            border-radius: 24px;
             pointer-events: none;
-            opacity: 0; /* Oculto por defecto */
-            transition: opacity 1.5s ease-in-out; /* Transición suave al aparecer */
+            opacity: 0;
+            transition: opacity 0.8s ease-in-out;
+            z-index: 0;
         }
 
-        /* Capa exterior con el filtro SVG */
+        .electric-overlay-1 {
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            opacity: 0.25;
+            mix-blend-mode: overlay;
+            transform: scale(1.05);
+            filter: blur(12px);
+            background: linear-gradient(-30deg, white, transparent 30%, transparent 70%, white);
+        }
+
+        .electric-background-glow {
+            position: absolute;
+            inset: 0;
+            border-radius: 24px;
+            filter: blur(28px);
+            transform: scale(1.08);
+            opacity: 0.2;
+            z-index: -1;
+            background: linear-gradient(-30deg, var(--electric-light-color), transparent, var(--electric-border-color));
+        }
+
         .electric-border-outer {
             position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
+            inset: 0;
             border: 2px solid rgba(58, 163, 255, 0.5);
-            border-radius: 14px;
+            border-radius: 24px;
+            padding-right: 2px; 
+            padding-bottom: 2px;
         }
 
         .electric-main-card {
             width: 100%;
             height: 100%;
-            border-radius: 14px;
+            border-radius: 24px;
             border: 2px solid var(--electric-border-color);
+            margin-top: -2px; 
+            margin-left: -2px;
             filter: url(#turbulent-displace);
-            opacity: 0.8;
+            opacity: 0.9;
         }
 
-        /* Glows */
-        .electric-glow-1 {
-            position: absolute;
-            inset: 0;
-            border: 2px solid rgba(58, 163, 255, 0.6);
-            border-radius: 14px;
-            filter: blur(2px);
-        }
-        .electric-glow-2 {
-            position: absolute;
-            inset: 0;
-            border: 2px solid var(--electric-light-color);
-            border-radius: 14px;
-            filter: blur(6px);
-        }
-
-        /* Estado ACTIVADO (Clase especial que se queda puesta) */
-        .timeline-item.electric-active .electric-layers {
-            opacity: 1;
-        }
-
-        /* Sobreescribimos el borde standard cuando está activo el eléctrico */
+        .timeline-item.electric-active .electric-layers { opacity: 1; }
         .timeline-item.electric-active .timeline-content {
-            background: rgba(39, 39, 42, 0.8);
-            border-color: transparent; /* Quitamos borde normal */
-            box-shadow: 0 0 30px rgba(58, 163, 255, 0.15); /* Glow ambiental central */
+            background: rgba(39, 39, 42, 0.95); 
+            border-color: transparent; 
+            box-shadow: none; 
         }
         
-        /* El punto también se queda azul permanente */
-        .timeline-item.electric-active .timeline-dot {
-            background: var(--electric-border-color);
-            box-shadow: 0 0 20px var(--electric-border-color), 0 0 0 4px #09090b;
-            border-color: white;
+        /* LOGO ELÉCTRICO */
+        .timeline-item.electric-active .logo-container {
+            border-color: #3aa3ff;
+            box-shadow: 0 0 20px rgba(58, 163, 255, 0.6);
+            background: #0c0c0e;
+            animation: pulse-electric 2s infinite;
         }
-
-        /* ========================================= */
-
+        
+        @keyframes pulse-electric {
+            0% { box-shadow: 0 0 15px rgba(58, 163, 255, 0.4); }
+            50% { box-shadow: 0 0 25px rgba(58, 163, 255, 0.8); }
+            100% { box-shadow: 0 0 15px rgba(58, 163, 255, 0.4); }
+        }
 
         /* --- DESKTOP LOGIC (md) --- */
         @media (min-width: 768px) {
-            .timeline-line-container {
-                left: 50%;
-                transform: translateX(-50%);
-            }
+            .timeline-line-container { left: 50%; transform: translateX(-50%); }
+            
+            /* No .timeline-dot styles anymore */
 
-            .timeline-dot {
-                left: 50%;
-                width: 20px;
-                height: 20px;
-                top: 24px;
-            }
+            .timeline-item { width: 50%; }
 
-            .timeline-item {
-                width: 50%;
-            }
-
-            /* Flechas/Conectores */
+            /* Flechas */
             .timeline-content::after {
                 content: '';
                 position: absolute;
-                top: 24px;
-                width: 0; 
-                height: 0; 
+                top: 32px; /* Centrado con logo */
+                transform: translateY(-50%);
+                width: 0; height: 0; 
                 border-top: 8px solid transparent;
                 border-bottom: 8px solid transparent; 
                 transition: border-color 0.3s ease;
             }
 
-            /* IMPARES (Izquierda) */
+            /* --- IMPARES (Izquierda) --- */
             .timeline-item:nth-child(odd) {
-                margin-left: 0;
-                margin-right: auto;
+                margin-left: 0; margin-right: auto;
                 padding-right: 40px;
                 text-align: right;
                 justify-content: flex-end;
@@ -304,11 +319,14 @@
             }
 
             .timeline-item:nth-child(odd) .timeline-content {
-                margin-left: 0;
-                width: 100%;
-                max-width: 450px;
+                width: 100%; max-width: 500px;
                 box-shadow: none; 
                 border-right: 1px solid rgba(255, 255, 255, 0.05);
+                
+                /* Layout Desktop Impar: Texto ... Logo */
+                flex-direction: row-reverse; 
+                align-items: flex-start;
+                gap: 1.5rem;
             }
 
             .timeline-item:nth-child(odd) .timeline-content::after {
@@ -316,17 +334,16 @@
                 border-left: 8px solid rgba(255, 255, 255, 0.1);
             }
             
-            /* Standard Active (Left) */
+            /* Active Left */
             .timeline-item:nth-child(odd).active:not(.electric-active) .timeline-content {
                 border-right: 1px solid rgba(255, 255, 255, 0.05);
                 border-left: 3px solid #3b82f6;
                 box-shadow: -15px 0 30px -10px rgba(59, 130, 246, 0.25);
             }
 
-            /* PARES (Derecha) */
+            /* --- PARES (Derecha) --- */
             .timeline-item:nth-child(even) {
-                margin-left: auto;
-                margin-right: 0;
+                margin-left: auto; margin-right: 0;
                 padding-left: 40px;
                 text-align: left;
                 justify-content: flex-start;
@@ -334,9 +351,12 @@
             }
 
             .timeline-item:nth-child(even) .timeline-content {
-                margin-left: 0;
-                width: 100%;
-                max-width: 450px;
+                width: 100%; max-width: 500px;
+                
+                /* Layout Desktop Par: Logo ... Texto */
+                flex-direction: row; 
+                align-items: flex-start;
+                gap: 1.5rem;
             }
 
             .timeline-item:nth-child(even) .timeline-content::after {
@@ -344,14 +364,13 @@
                 border-right: 8px solid rgba(255, 255, 255, 0.1);
             }
 
-            /* Standard Active (Right) */
+            /* Active Right */
             .timeline-item:nth-child(even).active:not(.electric-active) .timeline-content {
                 border-right: 3px solid #3b82f6;
                 box-shadow: 15px 0 30px -10px rgba(59, 130, 246, 0.25);
             }
 
-            /* AJUSTE PARA ELÉCTRICO EN DESKTOP */
-            /* Si es eléctrico activo, quitamos los bordes laterales normales para dejar solo el glow envolvente */
+            /* Ajuste Eléctrico Desktop */
             .timeline-item.electric-active .timeline-content {
                 border-left: none !important;
                 border-right: none !important;
@@ -407,26 +426,6 @@
                 <div class="h-1 w-24 bg-gradient-to-r from-blue-500 to-purple-500 mt-6 rounded-full fade-in-up" style="transition-delay: 200ms;"></div>
             </div>
 
-            <!-- Métricas -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-12 mb-32 w-full max-w-4xl mx-auto">
-                <div class="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-900/50 border border-white/5 fade-in-up hover:border-blue-500/30 transition-colors duration-300">
-                    <span class="text-4xl md:text-5xl font-bold text-white mb-2">50+</span>
-                    <span class="text-sm font-medium text-zinc-400">Proyectos</span>
-                </div>
-                <div class="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-900/50 border border-white/5 fade-in-up" style="transition-delay: 100ms;">
-                    <span class="text-4xl md:text-5xl font-bold text-white mb-2">8+</span>
-                    <span class="text-sm font-medium text-zinc-400">Años Exp.</span>
-                </div>
-                <div class="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-900/50 border border-white/5 fade-in-up" style="transition-delay: 200ms;">
-                    <span class="text-4xl md:text-5xl font-bold text-white mb-2">100%</span>
-                    <span class="text-sm font-medium text-zinc-400">Compromiso</span>
-                </div>
-                <div class="flex flex-col items-center text-center p-6 rounded-2xl bg-zinc-900/50 border border-white/5 fade-in-up" style="transition-delay: 300ms;">
-                    <span class="text-4xl md:text-5xl font-bold text-white mb-2">35+</span>
-                    <span class="text-sm font-medium text-zinc-400">Clientes</span>
-                </div>
-            </div>
-
             <!-- TIMELINE ESTRUCTURA -->
             <div class="timeline-wrapper">
                 
@@ -437,107 +436,150 @@
 
                 <!-- 1. Becario -->
                 <div class="timeline-item">
-                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2012 - 2013</span>
-                        <h3 class="text-2xl font-bold text-white mb-1">Becario de Diseño</h3>
-                        <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Universidad Local</h4>
-                        <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
-                            Primer contacto con el mundo profesional. Apoyo al departamento de comunicación en la creación de cartelería y maquetación editorial.
-                        </p>
+                        <!-- LOGO (A la derecha en desktop porque es item impar) -->
+                        <div class="logo-container">
+                            <img src="assets/logo_uni.svg" alt="Universidad" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'1.5\'><path d=\'M22 10v6M2 10l10-5 10 5-10 5z\'/><path d=\'M6 12v5c3 3 9 3 12 0v-5\'/></svg>'">
+                        </div>
+                        
+                        <div class="text-container">
+                            <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2012 - 2013</span>
+                            <h3 class="text-2xl font-bold text-white mb-1">Becario de Diseño</h3>
+                            <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Universidad Local</h4>
+                            <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
+                                Primer contacto con el mundo profesional. Apoyo al departamento de comunicación en la creación de cartelería y maquetación editorial.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 2. Junior -->
                 <div class="timeline-item">
-                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2013 - 2015</span>
-                        <h3 class="text-2xl font-bold text-white mb-1">Junior Designer</h3>
-                        <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Agencia Creativa Beta</h4>
-                        <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
-                            Diseño de banners, newsletters y retoque fotográfico. Aprendizaje intensivo de flujos de trabajo en agencia y trato con cliente.
-                        </p>
+                        <!-- LOGO (A la izquierda en desktop porque es item par) -->
+                        <div class="logo-container">
+                            <img src="assets/logo_beta.svg" alt="Beta Agency" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'1.5\'><rect x=\'2\' y=\'7\' width=\'20\' height=\'14\' rx=\'2\' ry=\'2\'/><path d=\'M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16\'/></svg>'">
+                        </div>
+
+                        <div class="text-container">
+                            <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2013 - 2015</span>
+                            <h3 class="text-2xl font-bold text-white mb-1">Junior Designer</h3>
+                            <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Agencia Creativa Beta</h4>
+                            <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
+                                Diseño de banners, newsletters y retoque fotográfico. Aprendizaje intensivo de flujos de trabajo en agencia y trato con cliente.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 3. Freelance -->
                 <div class="timeline-item">
-                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2015 - 2017</span>
-                        <h3 class="text-2xl font-bold text-white mb-1">Freelance Designer</h3>
-                        <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Trabajo Independiente</h4>
-                        <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
-                            Etapa de autonomía gestionando proyectos completos para PYMES: desde el branding hasta la implementación web en WordPress.
-                        </p>
+                        <div class="logo-container">
+                            <img src="assets/logo_freelance.svg" alt="Freelance" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'1.5\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M12 6v6l4 2\'/></svg>'">
+                        </div>
+
+                        <div class="text-container">
+                            <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2015 - 2017</span>
+                            <h3 class="text-2xl font-bold text-white mb-1">Freelance Designer</h3>
+                            <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Trabajo Independiente</h4>
+                            <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
+                                Etapa de autonomía gestionando proyectos completos para PYMES: desde el branding hasta la implementación web en WordPress.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 4. UI Specialist -->
                 <div class="timeline-item">
-                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2017 - 2019</span>
-                        <h3 class="text-2xl font-bold text-white mb-1">UI Specialist</h3>
-                        <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">StartUp Alpha</h4>
-                        <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
-                            Foco total en interfaces digitales. Creación de prototipos de alta fidelidad en Figma y colaboración estrecha con desarrolladores.
-                        </p>
+                        <div class="logo-container">
+                            <img src="assets/logo_alpha.svg" alt="Alpha Startup" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'1.5\'><path d=\'M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5\'/></svg>'">
+                        </div>
+
+                        <div class="text-container">
+                            <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2017 - 2019</span>
+                            <h3 class="text-2xl font-bold text-white mb-1">UI Specialist</h3>
+                            <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">StartUp Alpha</h4>
+                            <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
+                                Foco total en interfaces digitales. Creación de prototipos de alta fidelidad en Figma y colaboración estrecha con desarrolladores.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 5. Frontend -->
                 <div class="timeline-item">
-                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2019 - 2021</span>
-                        <h3 class="text-2xl font-bold text-white mb-1">Frontend Developer</h3>
-                        <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Tech Solutions Inc.</h4>
-                        <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
-                            Salto al código. Desarrollo de componentes en React, implementación de diseños pixel-perfect y optimización de rendimiento web.
-                        </p>
+                        <div class="logo-container">
+                            <img src="assets/logo_tech.svg" alt="Tech Solutions" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'1.5\'><polyline points=\'16 18 22 12 16 6\'/><polyline points=\'8 6 2 12 8 18\'/></svg>'">
+                        </div>
+
+                        <div class="text-container">
+                            <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2019 - 2021</span>
+                            <h3 class="text-2xl font-bold text-white mb-1">Frontend Developer</h3>
+                            <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Tech Solutions Inc.</h4>
+                            <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
+                                Salto al código. Desarrollo de componentes en React, implementación de diseños pixel-perfect y optimización de rendimiento web.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 6. UX/UI Lead -->
                 <div class="timeline-item">
-                    <div class="timeline-dot"></div>
                     <div class="timeline-content">
-                        <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2021 - 2023</span>
-                        <h3 class="text-2xl font-bold text-white mb-1">UX/UI Lead</h3>
-                        <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Digital Agency X</h4>
-                        <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
-                            Gestión de equipo de diseño (3 personas). Definición de procesos de diseño, auditorías de usabilidad y estrategia de producto.
-                        </p>
+                        <div class="logo-container">
+                            <img src="assets/logo_x.svg" alt="Digital X" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'1.5\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><line x1=\'4.93\' y1=\'4.93\' x2=\'19.07\' y2=\'19.07\'/></svg>'">
+                        </div>
+
+                        <div class="text-container">
+                            <span class="text-blue-400 font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2021 - 2023</span>
+                            <h3 class="text-2xl font-bold text-white mb-1">UX/UI Lead</h3>
+                            <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Digital Agency X</h4>
+                            <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
+                                Gestión de equipo de diseño (3 personas). Definición de procesos de diseño, auditorías de usabilidad y estrategia de producto.
+                            </p>
+                        </div>
                     </div>
                 </div>
 
                 <!-- 7. Senior Product Designer (CON EFECTO ELÉCTRICO) -->
                 <div class="timeline-item" id="last-card">
-                    <div class="timeline-dot"></div>
                     
                     <!-- Contenedor del contenido + Efectos -->
                     <div class="timeline-content electric-card-container">
                         
-                        <!-- Capas del Efecto Eléctrico (Absolutas, detrás del texto) -->
+                        <!-- Capas del Efecto Eléctrico (Absolutas) -->
                         <div class="electric-layers">
-                            <div class="electric-border-outer">
-                                <div class="electric-main-card"></div>
+                            <div class="electric-background-glow"></div>
+                            <div class="electric-overlay-1"></div>
+                            <div class="electric-inner-container">
+                                <div class="electric-border-outer">
+                                    <div class="electric-main-card"></div>
+                                </div>
+                                <div class="electric-glow-1"></div>
+                                <div class="electric-glow-2"></div>
                             </div>
-                            <div class="electric-glow-1"></div>
-                            <div class="electric-glow-2"></div>
                         </div>
 
                         <!-- Contenido Real (Relativo, encima del efecto) -->
-                        <div class="relative z-10">
-                            <!-- Fecha en azul eléctrico para hacer match -->
-                            <span class="text-[var(--electric-border-color)] font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2023 - Presente</span>
-                            <h3 class="text-2xl font-bold text-white mb-1">Senior Product Designer</h3>
-                            <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Global Tech Corp</h4>
-                            <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
-                                Liderando la visión de producto end-to-end. Creación de Sistemas de Diseño escalables a nivel global y mentoría de perfiles junior.
-                            </p>
+                        <!-- CAMBIO AQUÍ: flex-row en lugar de flex-row-reverse para mover logo a la izquierda -->
+                        <div class="relative z-10 flex flex-col md:flex-row gap-6 items-start">
+                            
+                            <!-- LOGO con efecto eléctrico propio -->
+                            <div class="logo-container">
+                                <img src="assets/logo_global.svg" alt="Global Tech" onerror="this.onerror=null; this.parentNode.innerHTML='<svg viewBox=\'0 0 24 24\' fill=\'none\' stroke=\'white\' stroke-width=\'1.5\'><circle cx=\'12\' cy=\'12\' r=\'10\'/><path d=\'M2 12h20\'/><path d=\'M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z\'/></svg>'">
+                            </div>
+
+                            <div class="text-container">
+                                <span class="text-[var(--electric-border-color)] font-mono text-xs font-bold tracking-wide uppercase mb-2 block">2023 - Presente</span>
+                                <h3 class="text-2xl font-bold text-white mb-1">Senior Product Designer</h3>
+                                <h4 class="text-sm font-semibold text-zinc-300 uppercase tracking-wider mb-3">Global Tech Corp</h4>
+                                <p class="text-zinc-400 leading-relaxed text-sm md:text-base">
+                                    Liderando la visión de producto end-to-end. Creación de Sistemas de Diseño escalables a nivel global y mentoría de perfiles junior.
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -573,9 +615,7 @@
             const wrapper = document.querySelector('.timeline-wrapper');
             const progressLine = document.querySelector('.timeline-progress');
             const items = document.querySelectorAll('.timeline-item');
-            const lastItem = items[items.length - 1]; // Referencia al último item
 
-            // Bandera para saber si el efecto eléctrico ya se activó
             let electricEffectTriggered = false;
 
             if (wrapper && progressLine) {
@@ -599,18 +639,16 @@
                         const itemTop = itemRect.top;
                         
                         // Lógica standard de activación
-                        const isReached = blueLineTip > (itemTop + 20);
+                        const isReached = blueLineTip > (itemTop + 50); // Un poco más de margen para llegar al logo
 
                         // Si es el ÚLTIMO ITEM
                         if (index === items.length - 1) {
-                            // Si se alcanza y aún no se ha disparado el trigger
                             if (isReached && !electricEffectTriggered) {
-                                electricEffectTriggered = true; // Marcamos como disparado para siempre
-                                item.classList.add('electric-active'); // Clase especial permanente
+                                electricEffectTriggered = true; 
+                                item.classList.add('electric-active'); 
                             }
-                            // NOTA: No hay 'else remove', una vez activo, se queda activo.
                         } else {
-                            // Items normales: se encienden y apagan
+                            // Items normales
                             if (isReached) {
                                 item.classList.add('active');
                             } else {
