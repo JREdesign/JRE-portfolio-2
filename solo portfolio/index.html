@@ -67,7 +67,17 @@
 
     <script type="text/babel">
       const { useState, useEffect, useMemo } = React;
-      const ITEMS_PER_PAGE = 6;
+      
+      // CAMBIO 1: 9 Proyectos por página
+      const ITEMS_PER_PAGE = 9;
+
+      // Función auxiliar para formatear nombres de categorías
+      const formatCategoryName = (cat) => {
+        if (cat === "all") return "Todos";
+        // CAMBIO 4: Si es ui-ux, mostrarlo en mayúsculas
+        if (cat.toLowerCase() === "ui-ux") return "UI/UX";
+        return cat.charAt(0).toUpperCase() + cat.slice(1);
+      };
 
       const Section = ({ id, title, children, titleCenter = true }) => (
         <section
@@ -153,13 +163,23 @@
                     <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-90"></div>
 
                     <div className="absolute bottom-0 left-0 w-full p-8 md:p-12">
-                      <span className="inline-flex items-center gap-1.5 px-3 py-1 mb-3 text-xs font-bold tracking-widest text-blue-400 uppercase bg-blue-500/10 border border-blue-500/20 rounded-full">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                        {project.tag}
-                      </span>
+                      <div className="flex items-center gap-3 mb-3">
+                         <span className="inline-flex items-center gap-1.5 px-3 py-1 text-xs font-bold tracking-widest text-blue-400 uppercase bg-blue-500/10 border border-blue-500/20 rounded-full">
+                          <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                          {project.tag}
+                        </span>
+
+                        {/* CAMBIO 3: Badge Nuevo en Modal */}
+                        {project.isNew && (
+                           <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold tracking-widest text-white uppercase bg-red-600/90 rounded border border-red-500/50 shadow-[0_0_10px_rgba(220,38,38,0.5)]">
+                            Nuevo
+                          </span>
+                        )}
+                      </div>
+                     
 
                       <div className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-2 opacity-80">
-                        {project.categories.join(" | ")}
+                        {project.categories.map(c => formatCategoryName(c)).join(" | ")}
                       </div>
 
                       <h3 className="text-4xl md:text-6xl font-bold text-white mb-2">
@@ -234,7 +254,11 @@
         const [currentPage, setCurrentPage] = useState(1);
         const [selectedProject, setSelectedProject] = useState(null);
 
-        const projects = window.JRE_PROJECTS || [];
+        // CAMBIO 2: Invertir el orden para mostrar los más recientes (últimos en consts.js) primero
+        const projects = useMemo(() => {
+             const raw = window.JRE_PROJECTS || [];
+             return [...raw].reverse();
+        }, []);
 
         useEffect(() => setCurrentPage(1), [activeCategory]);
 
@@ -286,9 +310,7 @@
                           : "bg-zinc-900/50 text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
                       }`}
                     >
-                      {cat === "all"
-                        ? "Todos"
-                        : cat.charAt(0).toUpperCase() + cat.slice(1)}
+                      {formatCategoryName(cat)}
                     </button>
                   ))}
                 </div>
@@ -300,12 +322,22 @@
                       onClick={() => setSelectedProject(project)}
                       className="group relative aspect-[4/3] bg-zinc-900 border border-zinc-800 rounded-xl overflow-hidden cursor-pointer hover:border-blue-500/30 transition-all duration-500 hover:-translate-y-2 hover:shadow-[0_20px_40px_-15px_rgba(0,0,0,0.7)]"
                     >
+                      {/* Imagen de fondo */}
                       <img
                         src={project.image}
                         alt={project.title}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+
+                      {/* CAMBIO 3: Etiqueta Visual NUEVO en Grid */}
+                      {project.isNew && (
+                        <div className="absolute top-4 right-4 z-20">
+                          <span className="px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-white bg-red-600 rounded shadow-lg animate-pulse">
+                            Nuevo
+                          </span>
+                        </div>
+                      )}
 
                       <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col justify-end items-start z-10">
                         <span className="inline-flex items-center gap-1.5 px-2 py-0.5 mb-2 rounded border border-zinc-600/50 bg-black/40 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-blue-300">
