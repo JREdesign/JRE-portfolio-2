@@ -1,5 +1,27 @@
-# Logs
-logs
+##################################################
+# NODE.JS - GITIGNORE COMPLETO
+##################################################
+
+############################################
+# DEPENDENCIAS
+############################################
+
+# Dependencias de Node
+node_modules/
+
+# Dependencias de pnpm
+.pnpm-store/
+
+# Dependencias de Yarn Plug'n'Play
+.pnp/
+.pnp.js
+
+
+############################################
+# LOGS
+############################################
+
+logs/
 *.log
 npm-debug.log*
 yarn-debug.log*
@@ -7,18 +29,169 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
 
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+############################################
+# ARCHIVOS DE ENTORNO
+############################################
+
+# Variables de entorno
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# Archivos de entorno personalizados
+.env.*.local
+
+
+############################################
+# BUILD / DIST
+############################################
+
+# Carpetas de build
+dist/
+build/
+out/
+
+# Next.js
+.next/
+
+# Nuxt
+.nuxt/
+
+# Vite
+.vite/
+
+# Gatsby
+.cache/
+public/
+
+# Angular
+.angular/
+coverage/
+
+# Remix
+.cache/
+build/
+
+
+############################################
+# CACHÉS Y ARCHIVOS TEMPORALES
+############################################
+
+# Caché de npm
+.npm/
+
+# Caché de yarn
+.yarn/cache/
+.yarn/unplugged/
+.yarn/build-state.yml
+.yarn/install-state.gz
+
+# Caché genérica
+.cache/
+.tmp/
+temp/
+
+
+############################################
+# TESTING
+############################################
+
+# Cobertura de tests
+coverage/
+*.lcov
+
+# Cypress
+cypress/screenshots/
+cypress/videos/
+
+
+############################################
+# SISTEMAS OPERATIVOS
+############################################
+
+# macOS
 .DS_Store
-*.suo
-*.ntvs*
-*.njsproj
-*.sln
-*.sw?
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.fuse_hidden*
+.directory
+
+
+############################################
+# EDITORES Y ENTORNOS DE DESARROLLO
+############################################
+
+# Visual Studio Code
+.vscode/
+!.vscode/extensions.json
+
+# JetBrains (WebStorm, IntelliJ, etc.)
+.idea/
+*.iml
+
+# Sublime Text
+*.sublime-workspace
+*.sublime-project
+
+# Vim
+*.swp
+*.swo
+*.swn
+*.bak
+
+
+############################################
+# ARCHIVOS GENERADOS AUTOMÁTICAMENTE
+############################################
+
+# Sourcemaps
+*.map
+
+# Archivos compilados
+*.tsbuildinfo
+
+
+############################################
+# LOCKFILES (NO BORRAR, SOLO COMENTAR SI HACE FALTA)
+############################################
+
+# Usa SOLO el lockfile que corresponda a tu gestor
+# package-lock.json
+# yarn.lock
+# pnpm-lock.yaml
+
+
+############################################
+# OTROS
+############################################
+
+# Archivos de backup
+*.bak
+*.backup
+*.old
+*.orig
+
+# Archivos comprimidos
+*.zip
+*.tar
+*.gz
+*.rar
+*.7z
