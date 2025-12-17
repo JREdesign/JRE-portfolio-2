@@ -81,7 +81,7 @@ export const CATEGORIES = {
     },
     other: {
         key: "other",
-        label: "OTROS / ESPECIALES",
+        label: "OTROS",
         order: 60,
         hint: "Proyectos especiales, híbridos o difíciles de encajar en una categoría principal.",
         includes: ["Otros", "Especiales", "Experimentales", "Híbridos"]
@@ -184,6 +184,7 @@ const baseProjects = [
         subtitle: "UI/UX Dashboard",
         tag: "UI/UX",
         isNew: true,
+        isFeatured: false,
         categories: ["ui-ux", "web-dev"],
         image: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1600&auto=format&fit=crop",
         description: "Diseño de interfaz para una plataforma de trading. Nos enfocamos en la legibilidad de datos en tiempo real y en un modo oscuro nativo.",
@@ -197,6 +198,7 @@ const baseProjects = [
         subtitle: "Diseño editorial",
         tag: "Editorial",
         isNew: true,
+        isFeatured: false,
         categories: ["editorial"],
         image: "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?q=80&w=1600&auto=format&fit=crop",
         description: "Maquetación y dirección de arte para una revista de arquitectura minimalista.",
@@ -210,6 +212,7 @@ const baseProjects = [
         subtitle: "Web corporativa 3D",
         tag: "Development",
         isNew: true,
+        isFeatured: false,
         categories: ["web-dev", "ui-ux"],
         image: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=1600&auto=format&fit=crop",
         description: "Sitio web inmersivo desarrollado con React y Three.js.",
@@ -223,6 +226,7 @@ const baseProjects = [
         subtitle: "Packaging sostenible",
         tag: "Branding",
         isNew: true,
+        isFeatured: true,
         categories: ["branding", "graphic-design"],
         image: "https://images.unsplash.com/photo-1632515904664-88421d097966?q=80&w=1600&auto=format&fit=crop",
         description: "Diseño de empaques biodegradables para cosmética orgánica.",
@@ -236,6 +240,7 @@ const baseProjects = [
         subtitle: "App de movilidad",
         tag: "Product",
         isNew: true,
+        isFeatured: true,
         categories: ["ui-ux"],
         image: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?q=80&w=1600&auto=format&fit=crop",
         description: "Aplicación móvil para alquiler de vehículos eléctricos.",
@@ -249,6 +254,7 @@ const baseProjects = [
         subtitle: "Identidad visual & branding",
         tag: "Branding",
         isNew: true,
+        isFeatured: true,
         categories: ["branding", "graphic-design", "web-dev"],
         image: "https://jredesigner.wordpress.com/wp-content/uploads/2025/03/gecko-promo.png",
         description: "Branding corporativo para Gecko Aventura orientado a construir una identidad visual moderna...",
@@ -269,9 +275,10 @@ const baseProjects = [
 const normalizedBaseProjects = baseProjects.map(normalizeProject);
 
 export const PROJECTS = [
-    ...normalizedBaseProjects,
-    ...normalizedBaseProjects.map((p) => ({ ...p, id: p.id + 10, title: p.title + " II", isNew: false })),
-    ...normalizedBaseProjects.map((p) => ({ ...p, id: p.id + 20, title: p.title + " III", isNew: false }))
+   ...normalizedBaseProjects,
+// Descomentar para clonar proyectos y simular un portafolio más grande   
+//    ...normalizedBaseProjects.map((p) => ({ ...p, id: p.id + 10, title: p.title + " II", isNew: false })),
+//    ...normalizedBaseProjects.map((p) => ({ ...p, id: p.id + 20, title: p.title + " III", isNew: false }))
 ];
 
 export const SERVICES = [

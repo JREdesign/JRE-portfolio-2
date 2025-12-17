@@ -1,7 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { createPortal } from 'react-dom'; // ✅ IMPORTANTE: Importamos createPortal
+import { createPortal } from 'react-dom';
 import { Section } from '../ui/Section';
-import { PROJECTS, CATEGORY_LIST } from '../../data/consts';
+import { PROJECTS, CATEGORY_LIST } from '../../data/consts'; // ⚠️ Si ya refactorizaste a carpeta 'data', cambia esto a '../../data'
+import { FaStar } from "react-icons/fa";
 
 const ITEMS_PER_PAGE = 9;
 
@@ -9,10 +10,8 @@ const ITEMS_PER_PAGE = 9;
 const ImageZoom = ({ src, onClose }) => {
     if (!src) return null;
 
-    // ✅ Usamos Portal para renderizar en document.body
     return createPortal(
         <div className="fixed inset-0 z-[110] bg-black/95 flex items-center justify-center p-4 backdrop-blur-md animate-[fadeIn_0.2s_ease-out]" onClick={onClose}>
-            {/* Botón de cerrar con z-index alto para asegurar click */}
             <button 
                 onClick={onClose} 
                 className="absolute top-5 right-5 z-[120] text-white/50 hover:text-white text-4xl p-2"
@@ -31,7 +30,6 @@ const ProjectModal = ({ project, onClose }) => {
     useEffect(() => {
         const handleEsc = (e) => e.key === "Escape" && onClose();
         window.addEventListener("keydown", handleEsc);
-        // Bloqueamos el scroll del body mientras el modal está abierto
         document.body.style.overflow = "hidden";
         return () => { 
             window.removeEventListener("keydown", handleEsc); 
@@ -46,19 +44,12 @@ const ProjectModal = ({ project, onClose }) => {
         return cat ? cat.label : catKey;
     };
 
-    // ✅ Usamos Portal para renderizar en document.body
     return createPortal(
         <>
-            {/* Overlay y contenedor principal con z-[100] para superar al Navbar (z-50) */}
             <div className="fixed inset-0 z-[100] flex items-center justify-center p-2 md:p-4">
-                
-                {/* Fondo oscuro */}
                 <div className="absolute inset-0 bg-black/90 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
 
-                {/* Modal Card */}
                 <div className="relative w-full max-w-[95vw] h-[90vh] md:h-[95vh] flex flex-col bg-zinc-950 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden animate-[fadeIn_0.3s_ease-out]">
-                    
-                    {/* ❌ BOTÓN DE CERRAR: Ahora está dentro del portal, nada lo tapará */}
                     <button 
                         onClick={onClose} 
                         className="absolute top-4 right-4 z-[110] w-12 h-12 rounded-full bg-black/60 hover:bg-zinc-800 border border-white/10 text-white flex items-center justify-center transition-all text-xl backdrop-blur-md"
@@ -67,7 +58,6 @@ const ProjectModal = ({ project, onClose }) => {
                     </button>
 
                     <div className="overflow-y-auto h-full scroll-smooth">
-                        {/* Imagen de cabecera */}
                         <div className="w-full h-[50vh] md:h-[65vh] relative shrink-0">
                             <img src={project.image} alt={project.title} className="w-full h-full object-cover" />
                             <div className="absolute inset-0 bg-gradient-to-t from-zinc-950 via-transparent to-transparent opacity-90"></div>
@@ -83,6 +73,11 @@ const ProjectModal = ({ project, onClose }) => {
                                             Nuevo
                                         </span>
                                     )}
+                                    {project.isFeatured && (
+                                        <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold tracking-widest text-white uppercase bg-yellow-500/20 border border-yellow-500/40 rounded">
+                                            <FaStar size={10} className="text-yellow-400" /> Destacado
+                                        </span>
+                                    )}
                                 </div>
 
                                 <div className="text-sm font-medium text-zinc-400 uppercase tracking-wider mb-2 opacity-80">
@@ -94,7 +89,6 @@ const ProjectModal = ({ project, onClose }) => {
                             </div>
                         </div>
 
-                        {/* Contenido */}
                         <div className="p-8 md:p-12 max-w-7xl mx-auto">
                             <div className="mb-10">
                                 <h4 className="text-sm uppercase tracking-wider text-zinc-500 mb-4 font-bold">Sobre el proyecto</h4>
@@ -130,11 +124,11 @@ const ProjectModal = ({ project, onClose }) => {
 
             <ImageZoom src={zoomedImg} onClose={() => setZoomedImg(null)} />
         </>,
-        document.body // 👈 Esto renderiza el modal fuera del root, directamente en el body
+        document.body
     );
 };
 
-// --- SUB-COMPONENT: CATEGORY BUTTON (Sin cambios en lógica, solo visuales previos) ---
+// --- SUB-COMPONENT: CATEGORY BUTTON ---
 const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, onSelect }) => {
     const [showTooltip, setShowTooltip] = useState(false);
     const tooltipId = `cat-tip-${catKey}`;
@@ -149,7 +143,7 @@ const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, on
             <button
                 type="button"
                 onClick={() => onSelect(catKey)}
-                aria-describedby={catKey !== "all" ? tooltipId : undefined}
+                aria-describedby={catKey !== "all" && catKey !== "featured" ? tooltipId : undefined}
                 className={`pl-5 pr-3 py-2 rounded-full text-sm font-medium transition-all duration-300 border flex items-center gap-2 ${active
                         ? "bg-zinc-100 text-zinc-900 border-white scale-105 shadow-lg shadow-white/10"
                         : "bg-zinc-900/50 text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
@@ -157,7 +151,7 @@ const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, on
             >
                 <span className="capitalize">{label.toLowerCase()}</span>
 
-                {catKey !== 'all' && hint && (
+                {catKey !== 'all' && catKey !== 'featured' && hint && (
                     <div
                         onClick={handleInfoClick}
                         className={`flex items-center justify-center w-5 h-5 rounded-full border cursor-pointer transition-colors z-10 ${active 
@@ -177,7 +171,7 @@ const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, on
                 )}
             </button>
 
-            {catKey !== "all" && (hint || (includes && includes.length > 0)) && (
+            {catKey !== "all" && catKey !== "featured" && (hint || (includes && includes.length > 0)) && (
                 <div
                     id={tooltipId}
                     role="tooltip"
@@ -211,15 +205,19 @@ const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, on
 };
 
 export const Projects = () => {
-    const [activeCategory, setActiveCategory] = useState("all");
+    const [activeCategory, setActiveCategory] = useState("featured");
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedProject, setSelectedProject] = useState(null);
 
     const orderedCategories = useMemo(() => [...CATEGORY_LIST].sort((a, b) => a.order - b.order), []);
     const projects = useMemo(() => [...PROJECTS].reverse().map(p => ({ ...p, categories: p.categories })), []);
 
+    // Cálculo de conteos
     const categoryCounts = useMemo(() => {
-        const counts = { all: projects.length };
+        const counts = { 
+            all: projects.length,
+            featured: projects.filter(p => p.isFeatured).length
+        };
         orderedCategories.forEach((cat) => (counts[cat.key] = 0));
         projects.forEach((p) => {
             (p.categories || []).forEach((k) => {
@@ -230,10 +228,12 @@ export const Projects = () => {
         return counts;
     }, [projects, orderedCategories]);
 
-    const filteredProjects = useMemo(
-        () => (activeCategory === "all" ? projects : projects.filter((p) => (p.categories || []).includes(activeCategory))),
-        [activeCategory, projects]
-    );
+    // Lógica de filtrado
+    const filteredProjects = useMemo(() => {
+        if (activeCategory === "featured") return projects.filter(p => p.isFeatured);
+        if (activeCategory === "all") return projects;
+        return projects.filter((p) => (p.categories || []).includes(activeCategory));
+    }, [activeCategory, projects]);
 
     const totalPages = Math.ceil(filteredProjects.length / ITEMS_PER_PAGE);
     const currentProjects = filteredProjects.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
@@ -248,9 +248,29 @@ export const Projects = () => {
 
     return (
         <Section id="portfolio" title="Proyectos" titleCenter={false}>
+            {/* GRADIENTE PARA ESTRELLA SVG (Oculto) */}
+            <svg width="0" height="0" className="absolute pointer-events-none">
+                <defs>
+                    <linearGradient id="star-gradient-projects" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" stopColor="#f472b6" />
+                        <stop offset="100%" stopColor="#60a5fa" />
+                    </linearGradient>
+                </defs>
+            </svg>
+
             <div id="portfolio-grid-anchor" className="h-0"></div>
 
-            <div className="flex flex-wrap gap-3 mb-10">
+            <div className="flex flex-wrap gap-2 mb-10">
+                {/* 1. Botón DESTACADOS */}
+                <CategoryFilterButton
+                    catKey="featured"
+                    label="Destacados"
+                    count={categoryCounts.featured}
+                    active={activeCategory === "featured"}
+                    onSelect={setActiveCategory}
+                />
+
+                {/* 2. Botón TODOS */}
                 <CategoryFilterButton
                     catKey="all"
                     label="Todos"
@@ -258,6 +278,8 @@ export const Projects = () => {
                     active={activeCategory === "all"}
                     onSelect={setActiveCategory}
                 />
+
+                {/* 3. Resto de Categorías */}
                 {orderedCategories.map((cat) => (
                     <CategoryFilterButton
                         key={cat.key}
@@ -272,63 +294,49 @@ export const Projects = () => {
                 ))}
             </div>
 
-<div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8 min-h-[50vh]">
-    {currentProjects.map((project) => (
-        <div
-            key={project.id}
-            onClick={() => setSelectedProject(project)}
-            // 1. Contenedor Base:
-            // - bg-zinc-950: Fondo oscuro igual que la web para que cuando no pase el rayo, no se vea borde gris.
-            // - Sin border: Eliminamos el 'border-zinc-800'.
-            className="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-blue-900/20 transition-all duration-500 hover:-translate-y-2 bg-zinc-950"
-        >
-            {/* 2. EL EFECTO SNAKE (Rayo veloz):
-                - inset-[-200%]: Lo hacemos gigante para que la rotación parezca lineal en los bordes.
-                - spin_1.5s: Mucho más rápido.
-                - via-blue-500: El degradado es Transparente -> Azul -> Transparente. Sin cortes bruscos.
-            */}
-            <div className="absolute inset-[-200%] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                <div className="w-full h-full bg-[conic-gradient(from_90deg_at_50%_50%,#0000_0%,#3b82f6_50%,#0000_100%)] animate-[spin_1.5s_linear_infinite]" />
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-8 min-h-[50vh]">
+                {currentProjects.map((project) => (
+                    <div
+                        key={project.id}
+                        onClick={() => setSelectedProject(project)}
+                        className="group relative aspect-[4/3] rounded-xl overflow-hidden cursor-pointer shadow-lg hover:shadow-blue-900/20 transition-all duration-500 hover:-translate-y-2 bg-zinc-950"
+                    >
+                        {/* EFECTO SNAKE (Veloz) */}
+                        <div className="absolute inset-[-200%] opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                            <div className="w-full h-full bg-[conic-gradient(from_90deg_at_50%_50%,#0000_0%,#3b82f6_50%,#0000_100%)] animate-[spin_1.5s_linear_infinite]" />
+                        </div>
 
-            {/* 3. MÁSCARA DEL CONTENIDO (La tarjeta en sí):
-                - inset-[2px]: Define el grosor del rayo (2px).
-                - bg-zinc-900: El color de fondo de la tarjeta.
-                - rounded-[10px]: Ajustado para encajar dentro del rounded-xl.
-            */}
-            <div className="absolute inset-[2px] bg-zinc-900 rounded-[10px] overflow-hidden z-10">
-                
-                {/* Imagen del proyecto */}
-                <img 
-                    src={project.image} 
-                    alt={project.title} 
-                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" 
-                    loading="lazy" 
-                />
-                
-                {/* Capa oscura para textos */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
+                        {/* Contenedor Interior */}
+                        <div className="absolute inset-[2px] bg-zinc-900 rounded-[10px] overflow-hidden z-10">
+                            <img src={project.image} alt={project.title} className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105" loading="lazy" />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 group-hover:opacity-90 transition-opacity" />
 
-                {/* Badge Nuevo */}
-                {project.isNew && (
-                    <div className="absolute top-4 right-4 z-20">
-                        <span className="px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-white bg-red-600 rounded shadow-lg animate-pulse">Nuevo</span>
+                            {/* ESTRELLA DE DESTACADO */}
+                            {project.isFeatured && (
+                                <div className="absolute top-4 left-4 z-20 bg-black/40 backdrop-blur-md border border-white/10 p-1.5 rounded-full shadow-lg" title="Proyecto Destacado">
+                                    <FaStar size={16} style={{ fill: "url(#star-gradient-projects)" }} />
+                                </div>
+                            )}
+
+                            {/* Badge Nuevo */}
+                            {project.isNew && (
+                                <div className="absolute top-4 right-4 z-20">
+                                    <span className="px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-white bg-red-600 rounded shadow-lg animate-pulse">Nuevo</span>
+                                </div>
+                            )}
+
+                            <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col justify-end items-start z-10">
+                                <span className="inline-flex items-center gap-1.5 px-2 py-0.5 mb-2 rounded border border-zinc-600/50 bg-black/40 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-blue-300">
+                                    <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
+                                    {project.tag}
+                                </span>
+                                <h3 className="text-xl font-bold text-white mb-1 group-hover:text-blue-200 transition-colors">{project.title}</h3>
+                                <p className="text-zinc-400 text-sm line-clamp-1">{project.subtitle}</p>
+                            </div>
+                        </div>
                     </div>
-                )}
-
-                {/* Textos */}
-                <div className="absolute bottom-0 left-0 w-full p-6 flex flex-col justify-end items-start z-10">
-                    <span className="inline-flex items-center gap-1.5 px-2 py-0.5 mb-2 rounded border border-zinc-600/50 bg-black/40 backdrop-blur-sm text-[10px] font-bold uppercase tracking-wider text-blue-300">
-                        <span className="w-1.5 h-1.5 rounded-full bg-blue-500"></span>
-                        {project.tag}
-                    </span>
-                    <h3 className="text-xl font-bold text-white mb-1 group-hover:text-blue-200 transition-colors">{project.title}</h3>
-                    <p className="text-zinc-400 text-sm line-clamp-1">{project.subtitle}</p>
-                </div>
+                ))}
             </div>
-        </div>
-    ))}
-</div>
 
             {filteredProjects.length === 0 && <p className="text-center text-zinc-600 mt-10">No hay proyectos en esta categoría.</p>}
 
