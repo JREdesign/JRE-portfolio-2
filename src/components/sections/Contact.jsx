@@ -30,7 +30,7 @@ const getSocialLabel = (link) => {
   const raw = `${link?.id ?? ''} ${label}`.toLowerCase();
 
   if (raw.includes('twitter') || raw === 'x' || raw.includes('x ')) return 'X';
-  
+
   return label;
 }
 
@@ -38,14 +38,14 @@ export const Contact = () => {
   return (
     <Section id="contacto" title="Contacto" titleCenter={false}>
       <div className="relative">
-        
+
         {/* Decoración de fondo (Glow sutil) */}
         <div className="absolute -top-20 -left-20 w-96 h-96 bg-blue-600/10 rounded-full blur-[100px] pointer-events-none" />
         <div className="absolute top-40 right-0 w-64 h-64 bg-cyan-500/5 rounded-full blur-[80px] pointer-events-none" />
 
         {/* 2 columnas principales */}
         <div className="relative grid grid-cols-1 lg:grid-cols-[minmax(0,580px)_minmax(0,1fr)] gap-12 lg:gap-20 w-full items-start">
-          
+
           {/* COLUMNA 1: Formulario (Glassmorphism) */}
           <div className="relative group">
             <div className="absolute -inset-0.5 bg-gradient-to-br from-blue-500/20 to-zinc-800/50 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000"></div>
@@ -90,29 +90,30 @@ export const Contact = () => {
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Tipo de proyecto *</label>
                     <div className="relative">
-                        <select className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none text-zinc-300 hover:border-zinc-700 cursor-pointer">
+                      {/* CORRECCIÓN: Eliminado 'text-zinc-300' */}
+                      <select className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none hover:border-zinc-700 cursor-pointer">
                         <option>Selecciona el tipo</option>
                         <option>Web Design</option>
                         <option>Development</option>
                         <option>Branding</option>
-                        </select>
-                        <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-zinc-500">
-                           <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-                        </div>
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-zinc-500">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
+                      </div>
                     </div>
                   </div>
                   <div className="space-y-1.5">
                     <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Presupuesto</label>
                     <div className="relative">
-                        <select className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none text-zinc-300 hover:border-zinc-700 cursor-pointer">
+                      <select className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none hover:border-zinc-700 cursor-pointer">
                         <option>Selecciona rango</option>
                         <option>€500 - €1000</option>
                         <option>€1000 - €3000</option>
                         <option>+€3000</option>
-                        </select>
-                        <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-zinc-500">
-                           <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"/></svg>
-                        </div>
+                      </select>
+                      <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-zinc-500">
+                        <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -147,14 +148,14 @@ export const Contact = () => {
                 { icon: ArrowRight, title: "Propuesta a medida", text: "Adaptada a tu presupuesto" }
               ].map((item, index) => (
                 <div key={index} className="flex items-center gap-5 p-4 rounded-2xl transition-colors hover:bg-zinc-900/40 group">
-                    <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800 text-blue-500 group-hover:scale-110 group-hover:border-blue-500/30 group-hover:text-blue-400 transition-all duration-300 shadow-lg shadow-black/20">
-                      <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
-                      <item.icon className="w-5 h-5 relative z-10" />
-                    </div>
-                    <div>
-                      <h4 className="font-bold text-white text-lg group-hover:text-blue-100 transition-colors">{item.title}</h4>
-                      <p className="text-sm text-zinc-500 group-hover:text-zinc-400 transition-colors">{item.text}</p>
-                    </div>
+                  <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800 text-blue-500 group-hover:scale-110 group-hover:border-blue-500/30 group-hover:text-blue-400 transition-all duration-300 shadow-lg shadow-black/20">
+                    <div className="absolute inset-0 bg-blue-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <item.icon className="w-5 h-5 relative z-10" />
+                  </div>
+                  <div>
+                    <h4 className="font-bold text-white text-lg group-hover:text-blue-100 transition-colors">{item.title}</h4>
+                    <p className="text-sm text-zinc-500 group-hover:text-zinc-400 transition-colors">{item.text}</p>
+                  </div>
                 </div>
               ))}
             </div>
@@ -166,12 +167,12 @@ export const Contact = () => {
               <h3 className="text-2xl font-bold text-white mb-6">
                 Información de contacto
               </h3>
-              
+
               <div className="space-y-6">
                 {/* Location */}
                 <div className="flex items-start gap-4 group">
                   <div className="mt-1 p-2 rounded-lg bg-zinc-900/50 border border-zinc-800/50 group-hover:border-blue-500/30 transition-colors">
-                     <MapPin className="w-5 h-5 text-blue-500" />
+                    <MapPin className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
                     <h4 className="text-white font-medium">Ubicación</h4>
@@ -196,9 +197,9 @@ export const Contact = () => {
 
                 {/* Horario */}
                 <div className="flex items-start gap-4 group">
-                   <div className="mt-1 p-2 rounded-lg bg-zinc-900/50 border border-zinc-800/50 group-hover:border-blue-500/30 transition-colors">
+                  <div className="mt-1 p-2 rounded-lg bg-zinc-900/50 border border-zinc-800/50 group-hover:border-blue-500/30 transition-colors">
                     <ClockIcon className="w-5 h-5 text-blue-500" />
-                   </div>
+                  </div>
                   <div>
                     <h4 className="text-white font-medium">Horario</h4>
                     <p className="text-zinc-400 text-sm">Lunes - Viernes: 9:00 - 15:00 (CET)</p>
@@ -213,7 +214,7 @@ export const Contact = () => {
         {/* SECTION: LINKS SOCIALES */}
         <div className="mt-20">
           <div className="relative rounded-3xl border border-zinc-800 bg-zinc-900/40 p-8 overflow-hidden">
-             {/* Gradient decorativo inferior */}
+            {/* Gradient decorativo inferior */}
             <div className="absolute top-0 right-0 -mr-20 -mt-20 w-64 h-64 bg-blue-500/5 blur-3xl rounded-full pointer-events-none" />
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 relative z-10">
@@ -237,23 +238,23 @@ export const Contact = () => {
                     rel="noreferrer"
                     className="group relative flex flex-col p-5 rounded-2xl bg-zinc-950 border border-zinc-800 hover:border-zinc-700 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/10 overflow-hidden"
                   >
-                     {/* Hover gradient effect */}
+                    {/* Hover gradient effect */}
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                    
+
                     <div className="flex items-start justify-between mb-4">
-                        <div className="p-2 rounded-lg bg-zinc-900 text-zinc-400 group-hover:text-blue-500 group-hover:bg-blue-500/10 transition-colors">
-                            {Icon ? <Icon className="w-5 h-5" /> : <ExternalLink className="w-5 h-5" />}
-                        </div>
-                        <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-blue-500 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
+                      <div className="p-2 rounded-lg bg-zinc-900 text-zinc-400 group-hover:text-blue-500 group-hover:bg-blue-500/10 transition-colors">
+                        {Icon ? <Icon className="w-5 h-5" /> : <ExternalLink className="w-5 h-5" />}
+                      </div>
+                      <ArrowRight className="w-4 h-4 text-zinc-600 group-hover:text-blue-500 -translate-x-2 opacity-0 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300" />
                     </div>
 
                     <div className="mt-auto">
-                        <span className="text-white font-bold block mb-0.5 group-hover:text-blue-100 transition-colors">
+                      <span className="text-white font-bold block mb-0.5 group-hover:text-blue-100 transition-colors">
                         {label}
-                        </span>
-                        <span className="text-zinc-500 text-xs block group-hover:text-zinc-400 transition-colors">
+                      </span>
+                      <span className="text-zinc-500 text-xs block group-hover:text-zinc-400 transition-colors">
                         {link.description}
-                        </span>
+                      </span>
                     </div>
                   </a>
                 );
@@ -263,7 +264,7 @@ export const Contact = () => {
         </div>
 
         <footer className="py-10 text-center text-zinc-600 text-xs relative z-20 mt-12 border-t border-zinc-900/50">
-           <span className="opacity-70">&copy; {new Date().getFullYear()} JREdesign. Todos los derechos reservados.</span>
+          <span className="opacity-70">&copy; {new Date().getFullYear()} JREdesign. Todos los derechos reservados.</span>
         </footer>
       </div>
     </Section>
