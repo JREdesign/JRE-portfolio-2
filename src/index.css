@@ -595,3 +595,24 @@
     transform: translateY(0);
   }
 }
+
+/* --- SOLO ÚLTIMA TARJETA ELÉCTRICA EN ROSA (#f472b6) --- */
+.timeline-wrapper > .timeline-item:last-child {
+  /* Cambiamos la variable SOLO para la última tarjeta */
+  --electric-border-color: #f472b6;
+
+  /* Glow más suave en rosa (opcional pero queda mejor con el borde rosa) */
+  --electric-light-color: #fbcfe8;
+}
+/* Si esto esta comentado el borde exterior es azul, si descomentas es rosa */
+/* El borde exterior estaba hardcodeado en azul, lo forzamos a rosa SOLO en la última 
+.timeline-wrapper > .timeline-item:last-child .electric-border-outer {
+  border-color: rgba(244, 114, 182, 0.5);
+}
+*/
+/* (Opcional) Si quieres que el logo también “acompañe” al rosa cuando está en electric-active */
+.timeline-wrapper > .timeline-item:last-child.electric-active .logo-container {
+  border-color: #f472b6;
+  box-shadow: 0 0 20px rgba(244, 114, 182, 0.6);
+  animation: pulse-electric-pink 2s infinite;
+}
