@@ -31,29 +31,30 @@ export const HeroSection = () => {
 
         return (
             <div 
-                // cursor-default: Evita que salga la mano
-                // hover:scale-105: Mantiene la ampliación en el contenedor
-                className={`relative flex items-center justify-center ${className} cursor-default transition-transform duration-500 ease-out hover:scale-105`} 
+                // He quitado el hover:scale-105 del contenedor para que el escalado
+                // lo controle exclusivamente la imagen de color (logoColor)
+                className={`relative flex items-center justify-center ${className} cursor-default`} 
                 onMouseEnter={handleMouseEnter}
             >
                 {/* IMAGEN 1: LOGO BLANCO (Original) */}
-                {/* Se desvanece (opacity-0) cuando isAnimating es true */}
+                {/* Simplemente se desvanece, sin sombra extra */}
                 <img 
                     src={ASSETS.logo} 
                     alt="JRE Logo" 
                     className={`absolute inset-0 w-full h-full object-contain transition-all duration-500 ease-in-out
-                        ${isAnimating ? 'opacity-0' : 'opacity-100'}
-                        hover:drop-shadow-[0_0_35px_rgba(59,130,246,0.7)]`} 
+                        ${isAnimating ? 'opacity-0' : 'opacity-100'}`} 
                 />
 
                 {/* IMAGEN 2: LOGO COLOR (Sustitución) */}
-                {/* Aparece (opacity-100) cuando isAnimating es true */}
+                {/* Aquí aplicamos el escalado 1.2 y la sombra #8d92f4 SOLO cuando isAnimating es true */}
                 <img 
                     src={ASSETS.logoColor} 
                     alt="JRE Logo Color" 
                     className={`w-full h-full object-contain transition-all duration-500 ease-in-out
-                        ${isAnimating ? 'opacity-100' : 'opacity-0'}
-                        hover:drop-shadow-[0_0_35px_rgba(59,130,246,0.7)]`} 
+                        ${isAnimating 
+                            ? 'opacity-100 scale-[1.1] drop-shadow-[0_0_10px_#9a3285]' // Estado Activo (3 seg)
+                            : 'opacity-0 scale-100' // Estado Inactivo
+                        }`} 
                 />
             </div>
         );
