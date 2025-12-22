@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Section } from '../ui/Section';
 import { GlowingServiceCard } from '../ui/Card';
-import { SERVICES } from '../../data/consts';
+import { useLanguage } from '../../context/LanguageContext';
 
 // --- PASO PROCESO (Internal Component) ---
 const useInView = (options) => {
@@ -37,24 +37,32 @@ const ProcessStep = ({ number, title, description, delay, isLast }) => {
 };
 
 export const Services = () => {
+    const { t } = useLanguage();
+
     return (
-        <Section id="servicios" title="Servicios" titleCenter={false}>
+        <Section id="servicios" title={t.services.title} titleCenter={false}>
             <div className="mb-16 text-center">
-                <h3 className="text-3xl font-bold text-white mb-4">Mi Proceso de Trabajo</h3>
+                <h3 className="text-3xl font-bold text-white mb-4">{t.services.process_title}</h3>
                 <p className="text-zinc-400 text-lg max-w-3xl mx-auto leading-relaxed">
-                    Soluciones integrales de diseño y comunicación visual para empresas, instituciones y emprendedores que buscan destacar en su mercado.
+                    {t.services.process_desc}
                 </p>
             </div>
 
             <div className="mb-24 grid grid-cols-1 md:grid-cols-4 gap-8">
-                <ProcessStep number="01" title="Estrategia Primero" description="Cada proyecto comienza con una comprensión profunda de tus objetivos y audiencia." delay={0} />
-                <ProcessStep number="02" title="Diseño Centrado en Resultados" description="No solo creamos algo bonito, sino algo que funciona y genera impacto." delay={200} />
-                <ProcessStep number="03" title="Implementación Completa" description="Desde la conceptualización hasta la entrega final con todos los archivos necesarios." delay={400} />
-                <ProcessStep number="04" title="Soporte Continuo" description="Te acompaño en la implementación y evolución de tu identidad visual." delay={600} isLast={true} />
+                {t.services.process.map((step, index) => (
+                    <ProcessStep
+                        key={step.id}
+                        number={step.number}
+                        title={step.title}
+                        description={step.description}
+                        delay={index * 200}
+                        isLast={index === t.services.process.length - 1}
+                    />
+                ))}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
-                {SERVICES.map((service, index) => (
+                {t.services.list.map((service, index) => (
                     <GlowingServiceCard
                         key={service.id || index}
                         title={service.title}

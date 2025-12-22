@@ -1,3 +1,4 @@
+import { LanguageProvider } from './context/LanguageContext';
 import { Layout } from './components/layout/Layout';
 import { HeroSection } from './components/sections/HeroSection';
 import { AboutSection } from './components/sections/AboutSection';
@@ -10,16 +11,18 @@ import { Contact } from './components/sections/Contact';
 
 function App() {
   return (
-    <Layout>
-      <HeroSection />
-      <AboutSection />
-      <Skills />
-      <Timeline />
-      <Projects />
-      <Services />
-      <Testimonials />
-      <Contact />
-    </Layout>
+    <LanguageProvider>
+      <Layout>
+        <HeroSection />
+        <AboutSection />
+        <Skills />
+        <Timeline />
+        <Projects />
+        <Services />
+        <Testimonials />
+        <Contact />
+      </Layout>
+    </LanguageProvider>
   )
 }
 

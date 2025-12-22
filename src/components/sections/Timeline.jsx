@@ -1,9 +1,10 @@
 import React, { useRef, useEffect } from 'react';
 import { Section } from '../ui/Section';
-import { TIMELINE } from '../../data/consts';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const Timeline = () => {
     const wrapperRef = useRef(null);
+    const { t } = useLanguage();
 
     useEffect(() => {
         const wrapper = wrapperRef.current;
@@ -40,32 +41,13 @@ export const Timeline = () => {
                 progressLine.style.height = `${percentage * 100}%`;
             }
 
-            const blueLineTip = wrapperTop + wrapperHeight * percentage; // Coordinate in viewport relative
-
-            // Check each item intersection with "blue line tip"
-            // Tip: We need to check if the tip has passed the item's top position
-            // But since coordinates are relative to viewport in rect.top...
-            // current tip Y in viewport = wrapperTop + (percentage * wrapperHeight) = triggerPoint (roughly, when clamped)
-
-            // Actually, let's use the logic from original:
-            // const blueLineTip = wrapperTop + wrapperHeight * percentage; (This is correct relative to viewport top if wrapperTop is relative to viewport)
-            // But verify: wrapperTop decreases as we scroll down.
-
-            domItems.forEach((itemEl, index) => {
+            domItems.forEach((itemEl) => {
                 const itemRect = itemEl.getBoundingClientRect();
                 const itemTop = itemRect.top; // Relative to viewport
 
-                // If blue line tip is below the item top (+ offset), activate it
-                // triggerPoint is where the "pen" is fixed on screen usually, or the line fills up to that point.
-                // In the original code:
-                // let percentage = (triggerPoint - wrapperTop) / wrapperHeight;
-                // blueLineTip = wrapperTop + wrapperHeight * percentage; (which basically equals triggerPoint unless clamped)
-
-                // Logic:
                 const isReached = triggerPoint > itemTop + 50;
 
                 if (itemEl.dataset.electric === "true") {
-                    // Special logic for last electric item
                     if (isReached && !electricEffectTriggered) {
                         electricEffectTriggered = true;
                         itemEl.classList.add("electric-active");
@@ -79,7 +61,6 @@ export const Timeline = () => {
 
         window.addEventListener("scroll", updateProgress, { passive: true });
         window.addEventListener("resize", updateProgress);
-        // Initial call
         updateProgress();
 
         return () => {
@@ -90,7 +71,7 @@ export const Timeline = () => {
     }, []);
 
     return (
-        <Section id="trayectoria" title="Trayectoria" titleCenter={false}>
+        <Section id="trayectoria" title={t.timeline.title} titleCenter={false}>
             {/* SVG Filter for Electric Effect (Hidden Global Definition) */}
             <svg style={{ position: 'absolute', width: 0, height: 0, overflow: 'hidden' }} aria-hidden="true">
                 <defs>
@@ -124,7 +105,7 @@ export const Timeline = () => {
                     <div className="timeline-progress" />
                 </div>
 
-                {TIMELINE.map((item, index) => (
+                {t.timeline.list.map((item, index) => (
                     <div
                         key={item.id || index}
                         className="timeline-item"
@@ -136,19 +117,7 @@ export const Timeline = () => {
                                 <div className="electric-layers">
                                     <div className="electric-background-glow" />
                                     <div className="electric-overlay-1" />
-                                    <div className="electric-inner-container"> {/* Missing in CSS maybe? Checked original CSS, it was there? */}
-                                        {/* Original CSS used .electric-border-outer and main-card directly inside layers? 
-                                             Let's match lines 127 in original CSS: 
-                                             .electric-layers children were: overlay-1, background-glow.
-                                             Wait, check line 964 in original HTML view 'electric-inner-container' was there!
-                                             But I removed it in my consolidated CSS probably. 
-                                             Let's stick to the structure I copied to CSS. 
-                                             My copied CSS has .electric-border-outer and .electric-main-card. 
-                                             So structure should be flat inside layers if my CSS expects it.
-                                             
-                                             Let's re-read CSS I wrote in Step 198: 
-                                             .electric-border-outer, .electric-main-card. 
-                                         */}
+                                    <div className="electric-inner-container">
                                         <div className="electric-border-outer">
                                             <div className="electric-main-card" />
                                         </div>
@@ -156,18 +125,8 @@ export const Timeline = () => {
                                 </div>
                             )}
 
-                            {/* Logo & Content Structure - Matches logic for Odd/Even matching basic styles */}
-                            {/* Note: Original had media query handling row-reverse for ODD items. 
-                                My structure: logo-container, text-container. 
-                                Original: logo-container, text-container.
-                                The flex-direction is handled by CSS .timeline-item:nth-child(odd) .timeline-content { flex-direction: row-reverse; }
-                            */}
-
                             <div className="relative z-10 flex flex-col md:flex-row gap-6 mr-auto items-start w-full">
-                                {/* Added relative z-10 to ensure text is above electric layers */}
                                 <div className="logo-container">
-                                    {/* Use text placeholder if image fails/missing */}
-                                    {/* In consts.js I set logo to null. So just render placeholder */}
                                     <span className="text-xs font-mono text-zinc-500">{item.company.substring(0, 2).toUpperCase()}</span>
                                 </div>
                                 <div className="text-container">

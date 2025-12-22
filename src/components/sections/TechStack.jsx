@@ -1,7 +1,9 @@
 import React, { useEffect } from 'react';
 import { TOOLS, AI_TOOLS } from '../../data/consts';
+import { useLanguage } from '../../context/LanguageContext';
 
 export const TechStack = () => {
+    const { t } = useLanguage();
     useEffect(() => {
         const aiItems = document.querySelectorAll(".ai-item");
 
@@ -10,12 +12,6 @@ export const TechStack = () => {
         aiItems.forEach((item) => {
             const wrapper = item.querySelector(".icon-wrapper");
             if (!wrapper) return;
-
-            // Ensure elements exist to avoid duplication if effect runs multiple times (though React should handle mount/dismount)
-            // But since we are appending manually, we should cleanup or check.
-            // Better: Create them if not exist, or just append and remove on cleanup.
-            // React way is to use ref for each item, but querySelectorAll is easier port from vanilla.
-            // I'll stick to vanilla port logic but with strict cleanup.
 
             const shine = document.createElement("div");
             shine.className = "card-shine";
@@ -89,7 +85,7 @@ export const TechStack = () => {
         <div className="w-full mt-24 space-y-20">
             <div>
                 <h3 className="text-3xl font-extrabold mb-8 flex items-center gap-2 bg-clip-text text-transparent bg-cotton-candy animate-shine bg-[length:200%_auto]">
-                    <span className="w-8 h-1 bg-blue-500 rounded-full" />Tecnologías / Herramientas
+                    <span className="w-8 h-1 bg-blue-500 rounded-full" />{t.skills.techStack.title_tech}
                 </h3>
                 <div className="tech-grid-container">
                     {TOOLS.map((tool, i) => (
@@ -105,7 +101,7 @@ export const TechStack = () => {
 
             <div>
                 <h3 className="text-3xl font-extrabold mb-8 flex items-center gap-2 bg-clip-text text-transparent bg-cotton-candy animate-shine bg-[length:200%_auto]">
-                    <span className="w-8 h-1 bg-blue-500 rounded-full" />Inteligencia Artificial
+                    <span className="w-8 h-1 bg-blue-500 rounded-full" />{t.skills.techStack.title_ai}
                 </h3>
                 <div className="tech-grid-container">
                     {AI_TOOLS.map((tool, i) => (

@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { Section } from '../ui/Section';
-import { SKILLS } from '../../data/consts';
 import { TechStack } from './TechStack';
+import { useLanguage } from '../../context/LanguageContext';
 
 // --- HOOK DE INTERSECCIÓN (Reused) ---
 const useInView = (options) => {
@@ -36,11 +36,12 @@ const SkillBar = ({ name, percentage, delay }) => {
 };
 
 export const Skills = () => {
+    const { t } = useLanguage();
     return (
-        <Section id="habilidades" title="Habilidades" titleCenter={false}>
-            <p className="mb-12 text-zinc-400">Mi experiencia abarca múltiples disciplinas del diseño y la comunicación visual.</p>
+        <Section id="habilidades" title={t.skills.title} titleCenter={false}>
+            <p className="mb-12 text-zinc-400">{t.skills.subtitle}</p>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
-                {SKILLS.map((skill, i) => (
+                {t.skills.list.map((skill, i) => (
                     <SkillBar key={i} name={skill.name} percentage={skill.pct} delay={i * 100} />
                 ))}
             </div>

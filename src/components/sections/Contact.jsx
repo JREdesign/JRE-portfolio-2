@@ -8,14 +8,14 @@ import {
   ArrowRight,
   ExternalLink,
 } from '../ui/Icons';
-import { CONTACT_LINKS } from '../../data/consts';
+import { useLanguage } from '../../context/LanguageContext';
 
 
 import { FaBehance, FaLinkedinIn, FaGithub } from 'react-icons/fa';
 import { FaXTwitter } from 'react-icons/fa6';
 
 const getSocialIcon = (link) => {
-  const raw = `${link?.id ?? ''} ${link?.label ?? ''}`.toLowerCase();
+  const raw = `${link?.id ?? ''} ${link?.label ?? ''} ${link?.name ?? ''}`.toLowerCase();
 
   if (raw.includes('behance')) return FaBehance;
   if (raw.includes('linkedin')) return FaLinkedinIn;
@@ -26,7 +26,7 @@ const getSocialIcon = (link) => {
 };
 
 const getSocialLabel = (link) => {
-  const label = String(link?.label ?? '').trim();
+  const label = String(link?.label ?? link?.name ?? '').trim();
   const raw = `${link?.id ?? ''} ${label}`.toLowerCase();
 
   if (raw.includes('twitter') || raw === 'x' || raw.includes('x ')) return 'X';
@@ -35,8 +35,10 @@ const getSocialLabel = (link) => {
 }
 
 export const Contact = () => {
+  const { t } = useLanguage();
+
   return (
-    <Section id="contacto" title="Contacto" titleCenter={false}>
+    <Section id="contacto" title={t.contact.title} titleCenter={false}>
       <div className="relative">
 
         {/* Decoración de fondo (Glow sutil) */}
@@ -51,48 +53,47 @@ export const Contact = () => {
             <div className="absolute -inset-0.5 bg-gradient-to-br from-blue-500/20 to-zinc-800/50 rounded-2xl blur opacity-75 group-hover:opacity-100 transition duration-1000"></div>
             <div className="relative bg-zinc-900/80 backdrop-blur-xl p-8 rounded-2xl border border-zinc-800/50 w-full shadow-2xl">
               <h3 className="text-2xl font-bold text-white mb-2 tracking-tight">
-                Cuéntame sobre tu proyecto
+                {t.contact.form_title}
               </h3>
               <p className="text-zinc-400 text-sm mb-8">
-                Completa el formulario y empecemos a crear algo único.
+                {t.contact.form_subtitle}
               </p>
 
               <form className="space-y-5" onSubmit={(e) => e.preventDefault()}>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Nombre *</label>
+                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">{t.contact.form_name}</label>
                     <input
                       type="text"
-                      placeholder="Tu nombre completo"
+                      placeholder={t.contact.form_name_placeholder}
                       className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-zinc-600 hover:border-zinc-700"
                     />
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Email *</label>
+                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">{t.contact.form_email}</label>
                     <input
                       type="email"
-                      placeholder="tu@email.com"
+                      placeholder={t.contact.form_email_placeholder}
                       className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-zinc-600 hover:border-zinc-700"
                     />
                   </div>
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Empresa / Organización</label>
+                  <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">{t.contact.form_company}</label>
                   <input
                     type="text"
-                    placeholder="Nombre de tu empresa (opcional)"
+                    placeholder={t.contact.form_company_placeholder}
                     className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-zinc-600 hover:border-zinc-700"
                   />
                 </div>
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Tipo de proyecto *</label>
+                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">{t.contact.form_type}</label>
                     <div className="relative">
-                      {/* CORRECCIÓN: Eliminado 'text-zinc-300' */}
                       <select className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none hover:border-zinc-700 cursor-pointer">
-                        <option>Selecciona el tipo</option>
+                        <option>{t.contact.form_type_select}</option>
                         <option>Web Design</option>
                         <option>Development</option>
                         <option>Branding</option>
@@ -103,10 +104,10 @@ export const Contact = () => {
                     </div>
                   </div>
                   <div className="space-y-1.5">
-                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Presupuesto</label>
+                    <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">{t.contact.form_budget}</label>
                     <div className="relative">
                       <select className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none hover:border-zinc-700 cursor-pointer">
-                        <option>Selecciona rango</option>
+                        <option>{t.contact.form_budget_select}</option>
                         <option>€500 - €1000</option>
                         <option>€1000 - €3000</option>
                         <option>+€3000</option>
@@ -119,10 +120,10 @@ export const Contact = () => {
                 </div>
 
                 <div className="space-y-1.5">
-                  <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">Detalles del proyecto *</label>
+                  <label className="text-xs font-semibold text-zinc-400 ml-1 uppercase tracking-wider">{t.contact.form_details}</label>
                   <textarea
                     rows="4"
-                    placeholder="Describe tu proyecto: objetivos, audiencia, estilo preferido..."
+                    placeholder={t.contact.form_details_placeholder}
                     className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all placeholder-zinc-600 hover:border-zinc-700 resize-none"
                   />
                 </div>
@@ -130,7 +131,7 @@ export const Contact = () => {
                 <button className="w-full relative group overflow-hidden rounded-xl bg-white p-[1px]">
                   <span className="absolute inset-[-1000%] animate-[spin_2s_linear_infinite] bg-[conic-gradient(from_90deg_at_50%_50%,#E2E8F0_0%,#3B82F6_50%,#E2E8F0_100%)]" />
                   <span className="inline-flex h-full w-full cursor-pointer items-center justify-center rounded-xl bg-gradient-to-r from-blue-600 to-cyan-600 px-8 py-4 text-sm font-bold text-white backdrop-blur-3xl transition-all group-hover:bg-gradient-to-r group-hover:from-blue-500 group-hover:to-cyan-500">
-                    Enviar Mensaje
+                    {t.contact.form_submit}
                     <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
                   </span>
                 </button>
@@ -143,9 +144,9 @@ export const Contact = () => {
             {/* Beneficios - Visualmente mejorados */}
             <div className="grid gap-6">
               {[
-                { icon: ClockIcon, title: "Respuesta en 24h", text: "Te respondo rápidamente" },
-                { icon: Calendar, title: "Consulta gratuita", text: "Primera reunión sin costo" },
-                { icon: ArrowRight, title: "Propuesta a medida", text: "Adaptada a tu presupuesto" }
+                { icon: ClockIcon, title: t.contact.benefit_1_title, text: t.contact.benefit_1_text },
+                { icon: Calendar, title: t.contact.benefit_2_title, text: t.contact.benefit_2_text },
+                { icon: ArrowRight, title: t.contact.benefit_3_title, text: t.contact.benefit_3_text }
               ].map((item, index) => (
                 <div key={index} className="flex items-center gap-5 p-4 rounded-2xl transition-colors hover:bg-zinc-900/40 group">
                   <div className="relative flex items-center justify-center w-12 h-12 rounded-full bg-zinc-900 border border-zinc-800 text-blue-500 group-hover:scale-110 group-hover:border-blue-500/30 group-hover:text-blue-400 transition-all duration-300 shadow-lg shadow-black/20">
@@ -165,7 +166,7 @@ export const Contact = () => {
             {/* Datos de contacto directos */}
             <div>
               <h3 className="text-2xl font-bold text-white mb-6">
-                Información de contacto
+                {t.contact.info_title || "Información de contacto"}
               </h3>
 
               <div className="space-y-6">
@@ -175,9 +176,9 @@ export const Contact = () => {
                     <MapPin className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
-                    <h4 className="text-white font-medium">Ubicación</h4>
-                    <p className="text-zinc-400 text-sm">Madrid, España</p>
-                    <p className="text-zinc-600 text-xs mt-0.5">Disponibilidad remota global</p>
+                    <h4 className="text-white font-medium">{t.contact.info_location_title}</h4>
+                    <p className="text-zinc-400 text-sm">{t.contact.info_location_text}</p>
+                    <p className="text-zinc-600 text-xs mt-0.5">{t.contact.info_location_sub}</p>
                   </div>
                 </div>
 
@@ -187,11 +188,11 @@ export const Contact = () => {
                     <Mail className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
-                    <h4 className="text-white font-medium">Email</h4>
+                    <h4 className="text-white font-medium">{t.contact.info_email_title}</h4>
                     <a href="mailto:jr.eugercios@gmail.com" className="text-zinc-400 hover:text-blue-400 hover:underline text-sm block transition-colors">
                       jr.eugercios@gmail.com
                     </a>
-                    <p className="text-zinc-600 text-xs mt-0.5">Soporte rápido</p>
+                    <p className="text-zinc-600 text-xs mt-0.5">{t.contact.info_email_sub}</p>
                   </div>
                 </div>
 
@@ -201,9 +202,9 @@ export const Contact = () => {
                     <ClockIcon className="w-5 h-5 text-blue-500" />
                   </div>
                   <div>
-                    <h4 className="text-white font-medium">Horario</h4>
-                    <p className="text-zinc-400 text-sm">Lunes - Viernes: 9:00 - 15:00 (CET)</p>
-                    <p className="text-zinc-600 text-xs mt-0.5">Urgencias fines de semana</p>
+                    <h4 className="text-white font-medium">{t.contact.info_hours_title}</h4>
+                    <p className="text-zinc-400 text-sm">{t.contact.info_hours_text}</p>
+                    <p className="text-zinc-600 text-xs mt-0.5">{t.contact.info_hours_sub}</p>
                   </div>
                 </div>
               </div>
@@ -219,14 +220,14 @@ export const Contact = () => {
 
             <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-8 relative z-10">
               <div>
-                <h4 className="text-white font-bold text-xl">Conecta conmigo</h4>
-                <p className="text-zinc-500 text-sm mt-1">Explora mi trabajo en otras plataformas.</p>
+                <h4 className="text-white font-bold text-xl">{t.contact.social_title}</h4>
+                <p className="text-zinc-500 text-sm mt-1">{t.contact.social_subtitle}</p>
               </div>
               <div className="h-px flex-1 bg-zinc-800 mx-6 hidden md:block self-center opacity-50" />
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 relative z-10">
-              {CONTACT_LINKS.map((link) => {
+              {t.contact.links.map((link) => {
                 const Icon = getSocialIcon(link);
                 const label = getSocialLabel(link);
 
@@ -264,7 +265,7 @@ export const Contact = () => {
         </div>
 
         <footer className="py-10 text-center text-zinc-600 text-xs relative z-20 mt-12 border-t border-zinc-900/50">
-          <span className="opacity-70">&copy; {new Date().getFullYear()} JREdesign. Todos los derechos reservados.</span>
+          <span className="opacity-70">&copy; {new Date().getFullYear()} JREdesign. {t.contact.copyright}</span>
         </footer>
       </div>
     </Section>

@@ -1,8 +1,8 @@
 import React, { useState, useMemo, useEffect } from 'react';
 import { createPortal } from 'react-dom';
 import { Section } from '../ui/Section';
-import { PROJECTS, CATEGORY_LIST } from '../../data/consts'; // ⚠️ Si ya refactorizaste a carpeta 'data', cambia esto a '../../data'
 import { FaStar } from "react-icons/fa";
+import { useLanguage } from '../../context/LanguageContext';
 
 const ITEMS_PER_PAGE = 9;
 
@@ -12,8 +12,8 @@ const ImageZoom = ({ src, onClose }) => {
 
     return createPortal(
         <div className="fixed inset-0 z-[110] bg-black/95 flex items-center justify-center p-4 backdrop-blur-md animate-[fadeIn_0.2s_ease-out]" onClick={onClose}>
-            <button 
-                onClick={onClose} 
+            <button
+                onClick={onClose}
                 className="absolute top-5 right-5 z-[120] text-white/50 hover:text-white text-4xl p-2"
             >
                 &times;
@@ -26,21 +26,22 @@ const ImageZoom = ({ src, onClose }) => {
 
 const ProjectModal = ({ project, onClose }) => {
     const [zoomedImg, setZoomedImg] = useState(null);
-    
+    const { t } = useLanguage();
+
     useEffect(() => {
         const handleEsc = (e) => e.key === "Escape" && onClose();
         window.addEventListener("keydown", handleEsc);
         document.body.style.overflow = "hidden";
-        return () => { 
-            window.removeEventListener("keydown", handleEsc); 
-            document.body.style.overflow = ""; 
+        return () => {
+            window.removeEventListener("keydown", handleEsc);
+            document.body.style.overflow = "";
         };
     }, [onClose]);
 
     if (!project) return null;
 
     const formatCategoryName = (catKey) => {
-        const cat = CATEGORY_LIST.find(c => c.key === catKey);
+        const cat = t.projects.categories.find(c => c.key === catKey);
         return cat ? cat.label : catKey;
     };
 
@@ -50,8 +51,8 @@ const ProjectModal = ({ project, onClose }) => {
                 <div className="absolute inset-0 bg-black/90 backdrop-blur-sm transition-opacity" onClick={onClose}></div>
 
                 <div className="relative w-full max-w-[95vw] h-[90vh] md:h-[95vh] flex flex-col bg-zinc-950 border border-zinc-800 rounded-xl shadow-2xl overflow-hidden animate-[fadeIn_0.3s_ease-out]">
-                    <button 
-                        onClick={onClose} 
+                    <button
+                        onClick={onClose}
                         className="absolute top-4 right-4 z-[110] w-12 h-12 rounded-full bg-black/60 hover:bg-zinc-800 border border-white/10 text-white flex items-center justify-center transition-all text-xl backdrop-blur-md"
                     >
                         ✕
@@ -70,12 +71,12 @@ const ProjectModal = ({ project, onClose }) => {
                                     </span>
                                     {project.isNew && (
                                         <span className="inline-flex items-center px-2 py-0.5 text-[10px] font-bold tracking-widest text-white uppercase bg-red-600/90 rounded border border-red-500/50 shadow-[0_0_10px_rgba(220,38,38,0.5)]">
-                                            Nuevo
+                                            {t.projects.badge_new}
                                         </span>
                                     )}
                                     {project.isFeatured && (
                                         <span className="inline-flex items-center gap-1 px-2 py-0.5 text-[10px] font-bold tracking-widest text-white uppercase bg-yellow-500/20 border border-yellow-500/40 rounded">
-                                            <FaStar size={10} className="text-yellow-400" /> Destacado
+                                            <FaStar size={10} className="text-yellow-400" /> {t.projects.badge_featured}
                                         </span>
                                     )}
                                 </div>
@@ -91,22 +92,22 @@ const ProjectModal = ({ project, onClose }) => {
 
                         <div className="p-8 md:p-12 max-w-7xl mx-auto">
                             <div className="mb-10">
-                                <h4 className="text-sm uppercase tracking-wider text-zinc-500 mb-4 font-bold">Sobre el proyecto</h4>
+                                <h4 className="text-sm uppercase tracking-wider text-zinc-500 mb-4 font-bold">{t.projects.modal_about}</h4>
                                 <p className="text-zinc-300 text-lg md:text-xl leading-relaxed max-w-4xl whitespace-pre-line">
-                                    {project.description || "Sin descripción detallada disponible."}
+                                    {project.description || t.projects.modal_no_desc}
                                 </p>
                             </div>
 
                             <div className="mb-12">
-                                <h4 className="text-sm uppercase tracking-wider text-zinc-500 mb-4 font-bold">Diseño y acabado</h4>
+                                <h4 className="text-sm uppercase tracking-wider text-zinc-500 mb-4 font-bold">{t.projects.modal_details_title}</h4>
                                 <p className="text-zinc-300 text-lg md:text-xl leading-relaxed max-w-4xl whitespace-pre-line">
-                                    {project.details || "Detalles de diseño no disponibles."}
+                                    {project.details || t.projects.modal_no_details}
                                 </p>
                             </div>
 
                             {project.gallery && project.gallery.length > 0 && (
                                 <div>
-                                    <h4 className="text-sm uppercase tracking-wider text-zinc-500 mb-6 font-bold">Galería (Clic para ampliar)</h4>
+                                    <h4 className="text-sm uppercase tracking-wider text-zinc-500 mb-6 font-bold">{t.projects.modal_gallery}</h4>
                                     <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-6">
                                         {project.gallery.map((img, idx) => (
                                             <div key={idx} className="group relative aspect-square rounded-lg overflow-hidden cursor-zoom-in bg-zinc-900 border border-zinc-800" onClick={() => setZoomedImg(img)}>
@@ -131,6 +132,7 @@ const ProjectModal = ({ project, onClose }) => {
 // --- SUB-COMPONENT: CATEGORY BUTTON ---
 const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, onSelect }) => {
     const [showTooltip, setShowTooltip] = useState(false);
+    const { t } = useLanguage();
     const tooltipId = `cat-tip-${catKey}`;
 
     const handleInfoClick = (e) => {
@@ -145,8 +147,8 @@ const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, on
                 onClick={() => onSelect(catKey)}
                 aria-describedby={catKey !== "all" && catKey !== "featured" ? tooltipId : undefined}
                 className={`pl-5 pr-3 py-2 rounded-full text-sm font-medium transition-all duration-300 border flex items-center gap-2 ${active
-                        ? "bg-zinc-100 text-zinc-900 border-white scale-105 shadow-lg shadow-white/10"
-                        : "bg-zinc-900/50 text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
+                    ? "bg-zinc-100 text-zinc-900 border-white scale-105 shadow-lg shadow-white/10"
+                    : "bg-zinc-900/50 text-zinc-400 border-zinc-800 hover:border-zinc-600 hover:text-white"
                     }`}
             >
                 <span className="capitalize">{label.toLowerCase()}</span>
@@ -154,10 +156,10 @@ const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, on
                 {catKey !== 'all' && catKey !== 'featured' && hint && (
                     <div
                         onClick={handleInfoClick}
-                        className={`flex items-center justify-center w-5 h-5 rounded-full border cursor-pointer transition-colors z-10 ${active 
-                            ? "border-zinc-300 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900" 
+                        className={`flex items-center justify-center w-5 h-5 rounded-full border cursor-pointer transition-colors z-10 ${active
+                            ? "border-zinc-300 text-zinc-500 hover:bg-zinc-200 hover:text-zinc-900"
                             : "border-zinc-700 text-zinc-500 hover:border-zinc-500 hover:text-zinc-300"}`}
-                        title="Ver detalles de categoría"
+                        title={t.projects.category_details_title}
                     >
                         <span className="text-[10px] font-serif font-bold italic leading-none mt-[1px]">i</span>
                     </div>
@@ -181,7 +183,7 @@ const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, on
                     <div className="absolute -top-1.5 left-1/2 -translate-x-1/2 w-3 h-3 bg-zinc-950/95 border-l border-t border-zinc-700/60 rotate-45"></div>
                     <div className="rounded-xl border border-zinc-700/60 bg-zinc-950/95 backdrop-blur-md shadow-xl p-4 text-left relative">
                         {showTooltip && (
-                            <button 
+                            <button
                                 onClick={(e) => { e.stopPropagation(); setShowTooltip(false); }}
                                 className="absolute top-2 right-2 text-zinc-500 hover:text-white md:hidden"
                             >
@@ -190,10 +192,10 @@ const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, on
                         )}
                         <div className="text-xs font-bold text-white mb-1 capitalize">{label.toLowerCase()}</div>
                         {hint && <div className="text-xs text-zinc-300 leading-snug mb-2">{hint}</div>}
-                        
+
                         {includes && includes.length > 0 && (
                             <div className="pt-2 border-t border-zinc-800 text-[11px] text-zinc-400 leading-snug">
-                                <span className="font-semibold text-zinc-300 block mb-1">Incluye:</span> 
+                                <span className="font-semibold text-zinc-300 block mb-1">{t.projects.category_includes}:</span>
                                 {includes.join(" · ")}
                             </div>
                         )}
@@ -205,16 +207,17 @@ const CategoryFilterButton = ({ catKey, label, hint, includes, count, active, on
 };
 
 export const Projects = () => {
+    const { t } = useLanguage();
     const [activeCategory, setActiveCategory] = useState("featured");
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedProject, setSelectedProject] = useState(null);
 
-    const orderedCategories = useMemo(() => [...CATEGORY_LIST].sort((a, b) => a.order - b.order), []);
-    const projects = useMemo(() => [...PROJECTS].reverse().map(p => ({ ...p, categories: p.categories })), []);
+    const orderedCategories = useMemo(() => [...t.projects.categories].sort((a, b) => a.order - b.order), [t.projects.categories]);
+    const projects = useMemo(() => [...t.projects.list].reverse(), [t.projects.list]);
 
     // Cálculo de conteos
     const categoryCounts = useMemo(() => {
-        const counts = { 
+        const counts = {
             all: projects.length,
             featured: projects.filter(p => p.isFeatured).length
         };
@@ -247,7 +250,7 @@ export const Projects = () => {
     };
 
     return (
-        <Section id="portfolio" title="Proyectos" titleCenter={false}>
+        <Section id="portfolio" title={t.projects.title} titleCenter={false}>
             {/* GRADIENTE PARA ESTRELLA SVG (Oculto) */}
             <svg width="0" height="0" className="absolute pointer-events-none">
                 <defs>
@@ -264,7 +267,7 @@ export const Projects = () => {
                 {/* 1. Botón DESTACADOS */}
                 <CategoryFilterButton
                     catKey="featured"
-                    label="Destacados"
+                    label={t.projects.filter_featured}
                     count={categoryCounts.featured}
                     active={activeCategory === "featured"}
                     onSelect={setActiveCategory}
@@ -273,7 +276,7 @@ export const Projects = () => {
                 {/* 2. Botón TODOS */}
                 <CategoryFilterButton
                     catKey="all"
-                    label="Todos"
+                    label={t.projects.filter_all}
                     count={categoryCounts.all}
                     active={activeCategory === "all"}
                     onSelect={setActiveCategory}
@@ -313,7 +316,7 @@ export const Projects = () => {
 
                             {/* ESTRELLA DE DESTACADO */}
                             {project.isFeatured && (
-                                <div className="absolute top-4 left-4 z-20 bg-black/40 backdrop-blur-md border border-white/10 p-1.5 rounded-full shadow-lg" title="Proyecto Destacado">
+                                <div className="absolute top-4 left-4 z-20 bg-black/40 backdrop-blur-md border border-white/10 p-1.5 rounded-full shadow-lg" title={t.projects.badge_featured}>
                                     <FaStar size={16} style={{ fill: "url(#star-gradient-projects)" }} />
                                 </div>
                             )}
@@ -321,7 +324,7 @@ export const Projects = () => {
                             {/* Badge Nuevo */}
                             {project.isNew && (
                                 <div className="absolute top-4 right-4 z-20">
-                                    <span className="px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-white bg-red-600 rounded shadow-lg animate-pulse">Nuevo</span>
+                                    <span className="px-2 py-1 text-[10px] font-bold uppercase tracking-widest text-white bg-red-600 rounded shadow-lg animate-pulse">{t.projects.badge_new}</span>
                                 </div>
                             )}
 
@@ -338,7 +341,7 @@ export const Projects = () => {
                 ))}
             </div>
 
-            {filteredProjects.length === 0 && <p className="text-center text-zinc-600 mt-10">No hay proyectos en esta categoría.</p>}
+            {filteredProjects.length === 0 && <p className="text-center text-zinc-600 mt-10">{t.projects.no_projects}</p>}
 
             {totalPages > 1 && (
                 <div className="flex justify-center items-center gap-2 mt-16">
@@ -347,7 +350,7 @@ export const Projects = () => {
                         disabled={currentPage === 1}
                         className="px-4 py-1.5 rounded-full text-sm font-medium border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-600 disabled:opacity-30 disabled:hover:border-zinc-800 transition-all bg-zinc-900/50"
                     >
-                        Anterior
+                        {t.projects.pagination_prev}
                     </button>
 
                     {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
@@ -368,7 +371,7 @@ export const Projects = () => {
                         disabled={currentPage === totalPages}
                         className="px-4 py-1.5 rounded-full text-sm font-medium border border-zinc-800 text-zinc-400 hover:text-white hover:border-zinc-600 disabled:opacity-30 disabled:hover:border-zinc-800 transition-all bg-zinc-900/50"
                     >
-                        Siguiente
+                        {t.projects.pagination_next}
                     </button>
                 </div>
             )}

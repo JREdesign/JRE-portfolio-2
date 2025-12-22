@@ -1,10 +1,11 @@
 import React, { useRef, useState } from 'react';
 import { FaStar, FaStarHalfAlt } from "react-icons/fa";
 import { MdVerified } from "react-icons/md";
-import { TESTIMONIALS } from '../../data/consts';
+import { useLanguage } from '../../context/LanguageContext';
 
 // --- COMPONENTE TARJETA CON EFECTO SPOTLIGHT ---
 const GlowingBentoCard = ({ testimonial, className }) => {
+  const { t } = useLanguage();
   const divRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);
@@ -36,7 +37,7 @@ const GlowingBentoCard = ({ testimonial, className }) => {
           background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(59, 130, 246, 0.15), transparent 40%)`,
         }}
       />
-      
+
       {/* Borde iluminado */}
       <div
         className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-300"
@@ -44,10 +45,10 @@ const GlowingBentoCard = ({ testimonial, className }) => {
           opacity,
           background: `radial-gradient(600px circle at ${position.x}px ${position.y}px, rgba(59, 130, 246, 0.4), transparent 40%)`,
           maskImage: 'linear-gradient(black, black)',
-          WebkitMaskImage: 'linear-gradient(black, black)', 
+          WebkitMaskImage: 'linear-gradient(black, black)',
           WebkitMaskComposite: 'xor',
           maskComposite: 'exclude',
-          padding: '1px', 
+          padding: '1px',
         }}
       />
 
@@ -56,7 +57,7 @@ const GlowingBentoCard = ({ testimonial, className }) => {
 
       {/* CONTENIDO */}
       <div className="relative z-10 p-6 md:p-8 h-full flex flex-col">
-        
+
         {/* Comillas */}
         <div className="absolute top-2 right-4 text-7xl text-blue-500/20 font-serif leading-none select-none -z-10 drop-shadow-[0_0_8px_rgba(59,130,246,0.3)]">
           ”
@@ -70,7 +71,7 @@ const GlowingBentoCard = ({ testimonial, className }) => {
             </div>
             <div className="absolute bottom-0 right-0 w-3 h-3 bg-green-500 border-2 border-zinc-900 rounded-full"></div>
           </div>
-          
+
           <div>
             <h4 className="font-bold text-white text-base tracking-tight flex items-center gap-1.5">
               {testimonial.name}
@@ -86,18 +87,18 @@ const GlowingBentoCard = ({ testimonial, className }) => {
         <div className="flex gap-1 mb-4">
           {[...Array(5)].map((_, i) => {
             const ratingValue = i + 1;
-            
+
             return (
               <span key={i}>
                 {testimonial.rating >= ratingValue ? (
-                   // ESTRELLA LLENA (Usa el ID del gradiente definido abajo)
-                   <FaStar size={14} style={{ fill: "url(#cotton-candy-gradient)" }} />
+                  // ESTRELLA LLENA (Usa el ID del gradiente definido abajo)
+                  <FaStar size={14} style={{ fill: "url(#cotton-candy-gradient)" }} />
                 ) : testimonial.rating >= ratingValue - 0.5 ? (
-                   // MEDIA ESTRELLA (Usa el mismo gradiente)
-                   <FaStarHalfAlt size={14} style={{ fill: "url(#cotton-candy-gradient)" }} />
+                  // MEDIA ESTRELLA (Usa el mismo gradiente)
+                  <FaStarHalfAlt size={14} style={{ fill: "url(#cotton-candy-gradient)" }} />
                 ) : (
-                   // ESTRELLA VACÍA (Color sólido gris)
-                   <FaStar size={14} className="text-zinc-800" />
+                  // ESTRELLA VACÍA (Color sólido gris)
+                  <FaStar size={14} className="text-zinc-800" />
                 )}
               </span>
             );
@@ -113,12 +114,13 @@ const GlowingBentoCard = ({ testimonial, className }) => {
 };
 
 export const TestimonialsGrid = () => {
-  const safeTestimonials = [...TESTIMONIALS, ...TESTIMONIALS].slice(0, 5);
+  const { t } = useLanguage();
+  const safeTestimonials = [...t.testimonials.list, ...t.testimonials.list].slice(0, 5);
 
   return (
     <div className="w-full relative">
-      
-{/* ✅ DEFINICIÓN DEL GRADIENTE SVG (MODO VERTICAL) 
+
+      {/* ✅ DEFINICIÓN DEL GRADIENTE SVG (MODO VERTICAL) 
           x1=0, y1=0 -> x2=0, y2=100 define una línea vertical de arriba a abajo.
       */}
       <svg width="0" height="0" className="absolute pointer-events-none">
@@ -135,29 +137,29 @@ export const TestimonialsGrid = () => {
 
       {/* Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 relative z-10">
-        
-        <GlowingBentoCard 
-          testimonial={safeTestimonials[0]} 
+
+        <GlowingBentoCard
+          testimonial={safeTestimonials[0]}
           className="md:col-span-2 bg-zinc-900/60 backdrop-blur-md"
         />
 
-        <GlowingBentoCard 
-          testimonial={safeTestimonials[1]} 
+        <GlowingBentoCard
+          testimonial={safeTestimonials[1]}
           className="md:col-span-1"
         />
 
-        <GlowingBentoCard 
-          testimonial={safeTestimonials[2]} 
+        <GlowingBentoCard
+          testimonial={safeTestimonials[2]}
           className="md:col-span-1 lg:row-span-2 bg-zinc-900/80"
         />
 
-        <GlowingBentoCard 
-          testimonial={safeTestimonials[3]} 
+        <GlowingBentoCard
+          testimonial={safeTestimonials[3]}
           className="md:col-span-1"
         />
 
-        <GlowingBentoCard 
-          testimonial={safeTestimonials[4]} 
+        <GlowingBentoCard
+          testimonial={safeTestimonials[4]}
           className="md:col-span-2 bg-zinc-900/60 backdrop-blur-md"
         />
       </div>
