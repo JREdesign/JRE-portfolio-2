@@ -94,9 +94,9 @@ export const Contact = () => {
                     <div className="relative">
                       <select className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none hover:border-zinc-700 cursor-pointer">
                         <option>{t.contact.form_type_select}</option>
-                        <option>Web Design</option>
-                        <option>Development</option>
-                        <option>Branding</option>
+                        {t.contact.form_type_options.map((opt, i) => (
+                          <option key={i}>{opt}</option>
+                        ))}
                       </select>
                       <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-zinc-500">
                         <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
@@ -108,9 +108,9 @@ export const Contact = () => {
                     <div className="relative">
                       <select className="w-full bg-zinc-950/50 border border-zinc-800 rounded-xl px-4 py-3.5 text-sm text-white focus:outline-none focus:ring-2 focus:ring-blue-500/50 focus:border-blue-500 transition-all appearance-none hover:border-zinc-700 cursor-pointer">
                         <option>{t.contact.form_budget_select}</option>
-                        <option>€500 - €1000</option>
-                        <option>€1000 - €3000</option>
-                        <option>+€3000</option>
+                        {t.contact.form_budget_options.map((opt, i) => (
+                          <option key={i}>{opt}</option>
+                        ))}
                       </select>
                       <div className="absolute inset-y-0 right-0 flex items-center px-4 pointer-events-none text-zinc-500">
                         <svg className="w-4 h-4 fill-current" viewBox="0 0 20 20"><path d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" /></svg>
@@ -166,7 +166,7 @@ export const Contact = () => {
             {/* Datos de contacto directos */}
             <div>
               <h3 className="text-2xl font-bold text-white mb-6">
-                {t.contact.info_title || "Información de contacto"}
+                {t.contact.info_title}
               </h3>
 
               <div className="space-y-6">

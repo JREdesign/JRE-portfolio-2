@@ -309,6 +309,7 @@ export const TRANSLATIONS = {
             description: "¿Tienes un proyecto en mente? Me encantaría charlar sobre cómo puedo ayudarte.",
             form_title: "Cuéntame sobre tu proyecto",
             form_subtitle: "Completa el formulario y empecemos a crear algo único.",
+            info_title: "Información de contacto",
             benefit_1_title: "Respuesta en 24h",
             benefit_1_text: "Te respondo rápidamente",
             benefit_2_title: "Consulta gratuita",
@@ -339,6 +340,8 @@ export const TRANSLATIONS = {
             form_details: "Detalles del proyecto *",
             form_details_placeholder: "Describe tu proyecto: objetivos, audiencia, estilo preferido...",
             form_submit: "Enviar Mensaje",
+            form_type_options: ["Diseño Web", "Desarrollo", "Branding"],
+            form_budget_options: ["€500 - €1000", "€1000 - €3000", "+€3000"],
             links: [
                 { id: 1, label: "Behance", description: "Portfolio visual completo", url: "#" },
                 { id: 2, label: "LinkedIn", description: "Perfil profesional", url: "https://linkedin.com/in/jorge-rev-eug" },
@@ -595,6 +598,7 @@ export const TRANSLATIONS = {
             description: "Have a project in mind? I'd love to chat about how I can help you.",
             form_title: "Tell me about your project",
             form_subtitle: "Fill out the form and let's start creating something unique.",
+            info_title: "Contact Information",
             benefit_1_title: "24h Response",
             benefit_1_text: "I respond to you quickly",
             benefit_2_title: "Free consultation",
@@ -625,6 +629,8 @@ export const TRANSLATIONS = {
             form_details: "Project details *",
             form_details_placeholder: "Describe your project: goals, audience, preferred style...",
             form_submit: "Send Message",
+            form_type_options: ["Web Design", "Development", "Branding"],
+            form_budget_options: ["€500 - €1000", "€1000 - €3000", "+€3000"],
             links: [
                 { id: 1, label: "Behance", description: "Complete visual portfolio", url: "#" },
                 { id: 2, label: "LinkedIn", description: "Professional profile", url: "https://linkedin.com/in/jorge-rev-eug" },
